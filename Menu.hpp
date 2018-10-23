@@ -21,11 +21,14 @@ class Menu
 
 			private:
 				Item _currentSelection;
+				SDL_Color _selectionColor;
+				bool _ascend;
 
 			public:
 				Model(void);
 				Item getCurrentSelection(void);
 				void setCurrentSelection(Item);
+				SDL_Color getSelectionColor(void);
 				void elapse(Uint32 const);
 		};
 

@@ -118,7 +118,12 @@ void Menu::View::display(void)
 		20, menuColor, menuItems[2]);
 
 	/* Highlight selection */
-	SDL_SetRenderDrawColor(renderer, 0, 20, 120, 255);
+	SDL_SetRenderDrawColor(renderer,
+		_model->getSelectionColor().r,
+		_model->getSelectionColor().g,
+		_model->getSelectionColor().b,
+		_model->getSelectionColor().a);
+
 	SDL_Rect r;
 	switch(_model->getCurrentSelection())
 	{
@@ -135,7 +140,10 @@ void Menu::View::display(void)
 	SDL_RenderDrawRect(renderer, &r);
 }
 
-Menu::Model::Model(void) : _currentSelection(DEBUG)
+Menu::Model::Model(void) :
+	_currentSelection(DEBUG),
+	_selectionColor{0, 0, 150, 255},
+	_ascend(true)
 {}
 
 Menu::Model::Item Menu::Model::getCurrentSelection(void)
@@ -150,5 +158,21 @@ void Menu::Model::setCurrentSelection(Menu::Model::Item selection)
 
 void Menu::Model::elapse(Uint32 const gameTicks)
 {
-	(void)(gameTicks);
+	if (_ascend && _selectionColor.b < 200)
+	{
+		_selectionColor.b += 4;
+		if (_selectionColor.b >= 200)
+			_ascend = false;
+	}
+	else if (!_ascend && _selectionColor.b > 50)
+	{
+		_selectionColor.b -= 4;
+		if (_selectionColor.b <= 50)
+			_ascend = true;
+	}
+}
+
+SDL_Color Menu::Model::getSelectionColor(void)
+{
+	return _selectionColor;
 }
