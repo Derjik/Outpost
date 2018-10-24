@@ -14,7 +14,6 @@ using namespace std;
 
 /*
  * TODO:
- * v Add a GlobalHandler (with default: handleX)
  * o Modularize menus
  * o Handle item placement
  *     TL T TR
@@ -36,32 +35,27 @@ int main(int argc, char ** argv)
 	{
 		Introspection::perform();
 
-		std::shared_ptr<TrueTypeFontManager> ttfManager(
-			new TrueTypeFontManager({ "courier", "arial" }));
-
-		std::shared_ptr<WindowManager> windowManager(
-			new WindowManager());
-
-		std::shared_ptr<GameControllerManager> gameControllerManager(
-			new GameControllerManager());
-
 		std::shared_ptr<Platform> platform(new Platform(
-			windowManager, gameControllerManager));
+			std::shared_ptr<WindowManager>(new WindowManager),
+			std::shared_ptr<GameControllerManager>(new GameControllerManager)));
 
-		windowManager->add("mainWindow", "SDL Main Window",
-							SDL_WINDOWPOS_CENTERED,
-							SDL_WINDOWPOS_CENTERED,
-							1366, 768,
-							Window::RatioType::FIXED_RATIO_STRETCH,
-							SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE,
-							SDL_RENDERER_ACCELERATED,
-							ttfManager);
+		platform->getWindowManager()->add(
+			"mainWindow",
+			"SDL Main Window",
+			SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_CENTERED,
+			1366, 768,
+			Window::RatioType::FIXED_RATIO_STRETCH,
+			SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE,
+			SDL_RENDERER_ACCELERATED,
+			std::shared_ptr<TrueTypeFontManager>(
+				new TrueTypeFontManager({ "courier", "arial" })));
 
 		std::shared_ptr<Menu::Model> menuModel(new Menu::Model);
 		std::shared_ptr<GameContext> menu(new GameContext(
 			platform,
 			menuModel,
-			std::shared_ptr<IView>(new Menu::View(menuModel, windowManager)),
+			std::shared_ptr<IView>(new Menu::View(menuModel, platform->getWindowManager())),
 			std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(platform, menuModel)),
 			nullptr,
 			nullptr,

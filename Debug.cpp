@@ -13,7 +13,7 @@ void Debug::View::display(void)
 	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
 	SDL_Renderer * renderer(mainWindow.getRenderer());
 
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 32, 255);
 	SDL_RenderClear(renderer);
 
 	SDL_GameController* contr(_platform->getGameControllerManager()->getFirstController());
@@ -28,7 +28,7 @@ void Debug::View::display(void)
 
 	SDL_Rect lxr{ 200, 199, leftx, 3 };
 	SDL_Rect lyr{ 199, 200, 3, lefty };
-	SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 194, 255, 255);
 	SDL_RenderFillRect(renderer, &lxr);
 	SDL_RenderFillRect(renderer, &lyr);
 	SDL_RenderDrawLine(renderer, 195 + leftx, 200 + lefty, 205 + leftx, 200 + lefty);

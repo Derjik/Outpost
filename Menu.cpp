@@ -93,7 +93,6 @@ void Menu::View::display(void)
 	Window & mainWindow = _windowManager->getByName("mainWindow");
 	SDL_Renderer * renderer(mainWindow.getRenderer());
 
-
 	/* Clear draw area with blue */
 	SDL_SetRenderDrawColor(renderer, 0, 0, 32, 255);
 	SDL_RenderFillRect(renderer, nullptr);

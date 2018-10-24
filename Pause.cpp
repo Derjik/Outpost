@@ -1,4 +1,4 @@
-#include "GCPause.hpp"
+#include "Pause.hpp"
 #include <VBN/Engine.hpp>
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
