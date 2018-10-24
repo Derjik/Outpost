@@ -1,18 +1,32 @@
-//#ifndef G_C_PAUSE_HPP_INCLUDED
-//#define G_C_PAUSE_HPP_INCLUDED
+#ifndef PAUSE_HPP_INCLUDED
+#define PAUSE_HPP_INCLUDED
 
-//#include "GameContext.hpp"
+#include "GameContext.hpp"
+#include "IModel.hpp"
+#include "IView.hpp"
+#include "IEventHandler.hpp"
 
-//class GCPause : public GameContext
-//{
-//	protected:
-//		void handleKeyboardEvent(SDL_Event const & event,
-//			std::shared_ptr<EngineUpdate> response);
-//		void drawContext(void);
-//		
-//	public:
-//		GCPause(std::shared_ptr<WindowManager> windowManager,
-//			std::shared_ptr<GameControllerManager> gameControllerManager);
-//};
+class Pause
+{
+	public:
+		class GameControllerEventHandler : public IEventHandler
+		{
+			public:
+				void handleEvent(SDL_Event const & event,
+					std::shared_ptr<EngineUpdate> update);
+		};
 
-//#endif // G_C_PAUSE_HPP_INCLUDED
+		class View : public IView
+		{
+			private:
+				std::shared_ptr<Platform> _platform;
+				std::shared_ptr<IView> _background;
+
+			public:
+				View(std::shared_ptr<Platform> platform,
+					std::shared_ptr<IView> background);
+				void display(void);
+		};
+};
+
+#endif // PAUSE_HPP_INCLUDED

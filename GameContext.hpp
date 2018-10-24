@@ -24,7 +24,6 @@ class GameContext : public IGameContext
 			SDL_Event const & event,
 			std::shared_ptr<EngineUpdate> response);
 
-	protected:
 		std::shared_ptr<Platform> _platform;
 
 		std::shared_ptr<IView> _view;

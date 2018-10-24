@@ -1,38 +1,45 @@
 #include "Pause.hpp"
-#include <VBN/Engine.hpp>
-#include <VBN/WindowManager.hpp>
+#include "Platform.hpp"
 #include <VBN/EngineUpdate.hpp>
+#include <VBN/WindowManager.hpp>
 
-//GCPause::GCPause(std::shared_ptr<WindowManager> windowManager,
-//	std::shared_ptr<GameControllerManager> gameControllerManager) :
-//	GameContext(windowManager, gameControllerManager)
-//{}
+Pause::View::View(std::shared_ptr<Platform> platform,
+	std::shared_ptr<IView> background) :
+	_platform(platform),
+	_background(background)
+{}
 
-//void GCPause::drawContext(void)
-//{
-//	Window & mainWindow = _windowManager->getByName("mainWindow");
-//	SDL_Renderer * renderer(mainWindow.getRenderer());
+void Pause::View::display(void)
+{
+	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
+	SDL_Renderer * renderer(mainWindow.getRenderer());
 
-//	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-//	SDL_RenderClear(renderer);
+	_background->display();
 
-//	mainWindow.printText("PAUSE", "courier", 40, { 255, 255, 255, 255 }, {230, 220, 250, 50});
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
+	SDL_RenderFillRect(renderer, nullptr);
 
-//	SDL_RenderPresent(renderer);
-//}
+	mainWindow.printText(
+		"PAUSE",
+		"courier", 40,
+		{ 255, 255, 255, 255 },
+		{230, 220, 250, 50});
 
-//void GCPause::handleKeyboardEvent(SDL_Event const & event,
-//	std::shared_ptr<EngineUpdate> response)
-//{
-//	switch(event.type)
-//	{
-//		case SDL_KEYDOWN:
-//			switch(event.key.keysym.sym)
-//			{
-//				case SDLK_ESCAPE:
-//					response->popGameContext();
-//				break;
-//			}
-//		break;
-//	}
-//}
+	SDL_RenderPresent(renderer);
+}
+
+void Pause::GameControllerEventHandler::handleEvent(SDL_Event const & event,
+	std::shared_ptr<EngineUpdate> update)
+{
+	switch (event.type)
+	{
+		case SDL_CONTROLLERBUTTONDOWN:
+			switch (event.cbutton.button)
+			{
+				case SDL_CONTROLLER_BUTTON_START:
+					update->popGameContext();
+				break;
+			}
+		break;
+	}
+}

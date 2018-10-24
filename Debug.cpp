@@ -1,3 +1,4 @@
+#include "Pause.hpp"
 #include "Debug.hpp"
 #include "Platform.hpp"
 #include <VBN/WindowManager.hpp>
@@ -69,7 +70,7 @@ Debug::GameControllerEventHandler::GameControllerEventHandler(
 {}
 
 void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
-	std::shared_ptr<EngineUpdate> response)
+	std::shared_ptr<EngineUpdate> update)
 {
 	SDL_Joystick * joystick(nullptr);
 	SDL_Haptic * haptic(nullptr);
@@ -83,6 +84,16 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
 						"Button START pressed on instance @%d",
 						event.cbutton.which);
+					update->pushGameContext(std::shared_ptr<IGameContext>(new GameContext(
+						_platform,
+						nullptr,
+						std::shared_ptr<IView>(new Pause::View(_platform,
+							std::shared_ptr<IView>(new View(_platform)))),
+						nullptr,
+						std::shared_ptr<IEventHandler>(
+							new Pause::GameControllerEventHandler),
+						nullptr,
+						nullptr)));
 				break;
 				case SDL_CONTROLLER_BUTTON_BACK:
 					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
