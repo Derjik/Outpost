@@ -1,7 +1,7 @@
 #include "Menu.hpp"
 #include "Debug.hpp"
 #include <VBN/WindowManager.hpp>
-#include <VBN/HandlerResponse.hpp>
+#include <VBN/EngineUpdate.hpp>
 
 Menu::KeyboardEventHandler::KeyboardEventHandler(
 	std::shared_ptr<Platform> platform,
@@ -11,7 +11,7 @@ Menu::KeyboardEventHandler::KeyboardEventHandler(
 {}
 
 void Menu::KeyboardEventHandler::handleEvent(SDL_Event const & event,
-	std::shared_ptr<HandlerResponse> response)
+	std::shared_ptr<EngineUpdate> response)
 {
 	switch(event.type)
 	{
@@ -58,7 +58,7 @@ void Menu::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 	}
 }
 
-void Menu::KeyboardEventHandler::perform(std::shared_ptr<HandlerResponse> response)
+void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 {
 	switch(_model->getCurrentSelection())
 	{

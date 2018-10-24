@@ -1,7 +1,7 @@
 #include "Debug.hpp"
 #include "Platform.hpp"
 #include <VBN/WindowManager.hpp>
-#include <VBN/HandlerResponse.hpp>
+#include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
 
 Debug::View::View(std::shared_ptr<Platform> platform) :
@@ -48,7 +48,7 @@ void Debug::View::display(void)
 }
 
 void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
-	std::shared_ptr<HandlerResponse> response)
+	std::shared_ptr<EngineUpdate> response)
 {
 	switch(event.type)
 	{
@@ -69,7 +69,7 @@ Debug::GameControllerEventHandler::GameControllerEventHandler(
 {}
 
 void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
-	std::shared_ptr<HandlerResponse> response)
+	std::shared_ptr<EngineUpdate> response)
 {
 	SDL_Joystick * joystick(nullptr);
 	SDL_Haptic * haptic(nullptr);

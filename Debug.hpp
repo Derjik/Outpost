@@ -13,7 +13,7 @@ class Debug
 		{
 			public:
 				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<HandlerResponse> response);
+					std::shared_ptr<EngineUpdate> response);
 		};
 
 		class GameControllerEventHandler : public IEventHandler
@@ -25,7 +25,7 @@ class Debug
 				GameControllerEventHandler(
 					std::shared_ptr<Platform> platform);
 				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<HandlerResponse> response);
+					std::shared_ptr<EngineUpdate> response);
 		};
 
 		class View : public IView

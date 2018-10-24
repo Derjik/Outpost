@@ -1,7 +1,7 @@
 #include "GCPause.hpp"
 #include <VBN/Engine.hpp>
 #include <VBN/WindowManager.hpp>
-#include <VBN/HandlerResponse.hpp>
+#include <VBN/EngineUpdate.hpp>
 
 //GCPause::GCPause(std::shared_ptr<WindowManager> windowManager,
 //	std::shared_ptr<GameControllerManager> gameControllerManager) :
@@ -22,7 +22,7 @@
 //}
 
 //void GCPause::handleKeyboardEvent(SDL_Event const & event,
-//	std::shared_ptr<HandlerResponse> response)
+//	std::shared_ptr<EngineUpdate> response)
 //{
 //	switch(event.type)
 //	{

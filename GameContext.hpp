@@ -13,16 +13,16 @@ class GameContext : public IGameContext
 	private:
 		void handleKeyboardEvent(
 			SDL_Event const & event,
-			std::shared_ptr<HandlerResponse> response);
+			std::shared_ptr<EngineUpdate> response);
 		void handleGameControllerEvent(
 			SDL_Event const & event,
-			std::shared_ptr<HandlerResponse> response);
+			std::shared_ptr<EngineUpdate> response);
 		void handleMouseEvent(
 			SDL_Event const & event,
-			std::shared_ptr<HandlerResponse> response);
+			std::shared_ptr<EngineUpdate> response);
 		void handleWindowEvent(
 			SDL_Event const & event,
-			std::shared_ptr<HandlerResponse> response);
+			std::shared_ptr<EngineUpdate> response);
 
 	protected:
 		std::shared_ptr<Platform> _platform;
@@ -48,7 +48,7 @@ class GameContext : public IGameContext
 
 		void handleEvent(
 			SDL_Event const & event,
-			std::shared_ptr<HandlerResponse> response);
+			std::shared_ptr<EngineUpdate> response);
 		void display(void);
 
 		void elapse(Uint32 const gameTicks);

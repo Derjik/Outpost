@@ -2,7 +2,7 @@
 #include "GCPause.hpp"
 #include <VBN/Engine.hpp>
 #include <VBN/WindowManager.hpp>
-#include <VBN/HandlerResponse.hpp>
+#include <VBN/EngineUpdate.hpp>
 
 //GCGame::GCGame(std::shared_ptr<WindowManager> windowManager,
 //		std::shared_ptr<GameControllerManager> gameControllerManager) :
@@ -26,7 +26,7 @@
 //}
 
 //void GCGame::handleKeyboardEvent(SDL_Event const & event,
-//	std::shared_ptr<HandlerResponse> response)
+//	std::shared_ptr<EngineUpdate> response)
 //{
 //	SDL_Renderer* r(nullptr);
 //	r=_windowManager->getByName("mainWindow").getRenderer();

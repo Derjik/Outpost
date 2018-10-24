@@ -26,7 +26,7 @@ GameContext::GameContext(
 {}
 
 void GameContext::handleEvent(SDL_Event const & event,
-				std::shared_ptr<HandlerResponse> response)
+				std::shared_ptr<EngineUpdate> response)
 {
 	switch(event.type)
 	{
@@ -55,7 +55,7 @@ void GameContext::handleEvent(SDL_Event const & event,
 }
 
 void GameContext::handleGameControllerEvent(SDL_Event const & event,
-	std::shared_ptr<HandlerResponse> response)
+	std::shared_ptr<EngineUpdate> response)
 {
 	switch(event.type)
 	{
@@ -71,7 +71,7 @@ void GameContext::handleGameControllerEvent(SDL_Event const & event,
 			SDL_LogInfo(SDL_LOG_CATEGORY_INPUT,
 				"[EVENT] Instance @%d removed", event.cdevice.which);
 
-			_platform->getGameControllerManager()->closeFromInstance(event.cdevice.which);
+			_platform->getGameControllerManager()->closeInstance(event.cdevice.which);
 		break;
 
 		default:
@@ -82,7 +82,7 @@ void GameContext::handleGameControllerEvent(SDL_Event const & event,
 }
 
 void GameContext::handleKeyboardEvent(SDL_Event const & event,
-	std::shared_ptr<HandlerResponse> response)
+	std::shared_ptr<EngineUpdate> response)
 {
 	Uint32 keyEvType = event.key.type;
 	Window & main(_platform->getWindowManager()->getByName("mainWindow"));
@@ -100,14 +100,14 @@ void GameContext::handleKeyboardEvent(SDL_Event const & event,
 }
 
 void GameContext::handleMouseEvent(SDL_Event const & event,
-	std::shared_ptr<HandlerResponse> response)
+	std::shared_ptr<EngineUpdate> response)
 {
 	if (_mouseEventHandler)
 		_mouseEventHandler->handleEvent(event, response);
 }
 
 void GameContext::handleWindowEvent(SDL_Event const & event,
-	std::shared_ptr<HandlerResponse> response)
+	std::shared_ptr<EngineUpdate> response)
 {
 	std::string windowName("");
 	SDL_Window * address(nullptr);

@@ -7,7 +7,7 @@
 //{
 //	protected:
 //		void handleKeyboardEvent(SDL_Event const & event,
-//			std::shared_ptr<HandlerResponse> response);
+//			std::shared_ptr<EngineUpdate> response);
 //		void drawContext(void);
 //		
 //	public:

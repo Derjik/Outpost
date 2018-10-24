@@ -52,7 +52,7 @@ int main(int argc, char ** argv)
 							SDL_WINDOWPOS_CENTERED,
 							SDL_WINDOWPOS_CENTERED,
 							1366, 768,
-							RatioType::FIXED_RATIO_STRETCH,
+							Window::RatioType::FIXED_RATIO_STRETCH,
 							SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE,
 							SDL_RENDERER_ACCELERATED,
 							ttfManager);
@@ -68,7 +68,7 @@ int main(int argc, char ** argv)
 			nullptr));
 
 		std::shared_ptr<Engine> engine(new Engine(menu));
-		engine->run();
+		engine->run(0.01);
 	}
 
 	IMG_Quit();

@@ -6,6 +6,8 @@
 #include "IView.hpp"
 #include "IEventHandler.hpp"
 
+class WindowManager;
+
 class Menu
 {
 	public:
@@ -37,13 +39,13 @@ class Menu
 			private:
 				std::shared_ptr<Platform> _platform;
 				std::shared_ptr<Model> _model;
-				void perform(std::shared_ptr<HandlerResponse> response);
+				void perform(std::shared_ptr<EngineUpdate> response);
 
 			public:
 				KeyboardEventHandler(std::shared_ptr<Platform> platform,
 									std::shared_ptr<Model> model);
 				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<HandlerResponse> response);
+					std::shared_ptr<EngineUpdate> response);
 		};
 
 		class View : public IView
