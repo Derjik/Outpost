@@ -5,8 +5,76 @@
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
 
-Debug::View::View(std::shared_ptr<Platform> platform) :
-	_platform(platform)
+Debug::Model::Model(std::shared_ptr<Platform> platform) : _platform(platform)
+{}
+
+void Debug::Model::elapse(Uint32 const gameTicks)
+{
+	SDL_GameController* contr(
+		_platform->getGameControllerManager()->getFirstController());
+
+	_leftJoystick.first =
+		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_LEFTX) / 256;
+
+	_leftJoystick.second =
+		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_LEFTY) / 256;
+
+	_rightJoystick.first =
+		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_RIGHTX) / 256;
+
+	_rightJoystick.second =
+		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_RIGHTY) / 256;
+
+	_triggers.first =
+		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_TRIGGERLEFT) / 256;
+
+	_triggers.second =
+		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) / 256;
+
+	_buttons["A"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_A);
+	_buttons["B"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_B);
+	_buttons["X"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_X);
+	_buttons["Y"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_Y);
+
+	_buttons["UP"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_DPAD_UP);
+	_buttons["DOWN"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_DPAD_DOWN);
+	_buttons["LEFT"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+	_buttons["RIGHT"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+
+	_buttons["LSTICK"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_LEFTSTICK);
+	_buttons["RSTICK"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+	_buttons["LSHOULDER"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_LEFTSTICK);
+	_buttons["RSHOULDER"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+
+	_buttons["START"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_START);
+	_buttons["BACK"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_BACK);
+	_buttons["GUIDE"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_GUIDE);
+}
+
+std::pair<Sint16, Sint16> Debug::Model::getLeftJoystick(void)
+{
+	return _leftJoystick;
+}
+
+std::pair<Sint16, Sint16> Debug::Model::getRightJoystick(void)
+{
+	return _rightJoystick;
+}
+
+std::pair<Sint16, Sint16> Debug::Model::getTriggers(void)
+{
+	return _triggers;
+}
+
+bool Debug::Model::getButton(std::string const & button)
+{
+	return _buttons[button];
+}
+
+Debug::View::View(std::shared_ptr<Platform> platform,
+	std::shared_ptr<Model> model) :
+	_platform(platform),
+	_model(model)
 {}
 
 void Debug::View::display(void)
@@ -17,13 +85,12 @@ void Debug::View::display(void)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 32, 255);
 	SDL_RenderClear(renderer);
 
-	SDL_GameController* contr(_platform->getGameControllerManager()->getFirstController());
-	Sint16 leftx(SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_LEFTX)/256),
-		lefty(SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_LEFTY)/256),
-		rightx(SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_RIGHTX)/256),
-		righty(SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_RIGHTY)/256),
-		ltrigger(SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_TRIGGERLEFT)/256),
-		rtrigger(SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT)/256);
+	Sint16 leftx(_model->getLeftJoystick().first),
+		lefty(_model->getLeftJoystick().second),
+		rightx(_model->getRightJoystick().first),
+		righty(_model->getRightJoystick().second),
+		ltrigger(_model->getTriggers().first),
+		rtrigger(_model->getTriggers().second);
 
 	mainWindow.printText("DEBUG", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
 
@@ -65,8 +132,10 @@ void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 }
 
 Debug::GameControllerEventHandler::GameControllerEventHandler(
-	std::shared_ptr<Platform> platform) :
-	_platform(platform)
+	std::shared_ptr<Platform> platform,
+	std::shared_ptr<Model> model) :
+	_platform(platform),
+	_model(model)
 {}
 
 void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
@@ -88,7 +157,7 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 						_platform,
 						nullptr,
 						std::shared_ptr<IView>(new Pause::View(_platform,
-							std::shared_ptr<IView>(new View(_platform)))),
+							std::shared_ptr<IView>(new View(_platform, _model)))),
 						nullptr,
 						std::shared_ptr<IEventHandler>(
 							new Pause::GameControllerEventHandler),

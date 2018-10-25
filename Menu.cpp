@@ -60,15 +60,22 @@ void Menu::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 
 void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 {
+	std::shared_ptr<Debug::Model> model(nullptr);
+
 	switch(_model->getCurrentSelection())
 	{
 		case Model::DEBUG:
-			response->pushGameContext(std::shared_ptr<IGameContext>(
-				new GameContext(_platform, nullptr,
-					std::shared_ptr<IView>(new Debug::View(_platform)),
+			model = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
+
+			response->pushGameContext(
+				std::shared_ptr<IGameContext>(new GameContext(
+					_platform,
+					model,
+					std::shared_ptr<IView>(new Debug::View(_platform, model)),
 					std::shared_ptr<IEventHandler>(new Debug::KeyboardEventHandler),
-					std::shared_ptr<IEventHandler>(new Debug::GameControllerEventHandler(_platform)),
-					nullptr, nullptr)));
+					std::shared_ptr<IEventHandler>(new Debug::GameControllerEventHandler(_platform, model)),
+					nullptr,
+					nullptr)));
 		break;
 		case Model::START:
 			/*
