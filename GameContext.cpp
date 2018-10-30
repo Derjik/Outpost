@@ -4,7 +4,7 @@
 #include "IView.hpp"
 #include "IModel.hpp"
 
-#include <SDL2/SDL_log.h>
+#include <VBN/Logging.hpp>
 #include <VBN/WindowManager.hpp>
 #include <VBN/GameControllerManager.hpp>
 
@@ -59,19 +59,19 @@ void GameContext::handleGameControllerEvent(SDL_Event const & event,
 {
 	switch(event.type)
 	{
-		/* Add a game controller device */
 		case SDL_CONTROLLERDEVICEADDED:
-			SDL_LogInfo(SDL_LOG_CATEGORY_INPUT,
+			INFO(SDL_LOG_CATEGORY_INPUT,
 				"[EVENT] Device #%d added", event.cdevice.which);
 
 			_platform->getGameControllerManager()->openFromDeviceIndex(event.cdevice.which);
 		break;
-		/* Remove a game controller device */
 		case SDL_CONTROLLERDEVICEREMOVED:
-			SDL_LogInfo(SDL_LOG_CATEGORY_INPUT,
+			INFO(SDL_LOG_CATEGORY_INPUT,
 				"[EVENT] Instance @%d removed", event.cdevice.which);
 
 			_platform->getGameControllerManager()->closeInstance(event.cdevice.which);
+		break;
+		case SDL_CONTROLLERDEVICEREMAPPED:
 		break;
 
 		default:
@@ -118,7 +118,7 @@ void GameContext::handleWindowEvent(SDL_Event const & event,
 			address = SDL_GetWindowFromID(event.window.windowID);
 			windowName = _platform->getWindowManager()->getWindowNameByAddress(address);
 
-			SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+			DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 				"Window '%s' (ID: %d) changed size to %dx%d",
 				windowName.c_str(), _platform->getWindowManager()->getByAddress(address).getId(),
 				event.window.data1, event.window.data2);

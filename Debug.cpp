@@ -4,6 +4,7 @@
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
+#include <VBN/Logging.hpp>
 
 Debug::Model::Model(std::shared_ptr<Platform> platform) : _platform(platform)
 {}
@@ -150,7 +151,7 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 			switch (event.cbutton.button)
 			{
 				case SDL_CONTROLLER_BUTTON_START:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button START pressed on instance @%d",
 						event.cbutton.which);
 					update->pushGameContext(std::shared_ptr<IGameContext>(new GameContext(
@@ -165,37 +166,37 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 						nullptr)));
 				break;
 				case SDL_CONTROLLER_BUTTON_BACK:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button BACK pressed on instance @%d",
 						event.cbutton.which);
 					joystick = SDL_JoystickFromInstanceID(event.cbutton.which);
 					switch (SDL_JoystickCurrentPowerLevel(joystick))
 					{
 						case SDL_JOYSTICK_POWER_WIRED:
-							SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Wired");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Wired");
 						break;
 						case SDL_JOYSTICK_POWER_MAX:
-							SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Max");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Max");
 						break;
 						case SDL_JOYSTICK_POWER_FULL:
-							SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Full");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Full");
 						break;
 						case SDL_JOYSTICK_POWER_MEDIUM:
-							SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Medium");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Medium");
 						break;
 						case SDL_JOYSTICK_POWER_LOW:
-							SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Low");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Low");
 						break;
 						case SDL_JOYSTICK_POWER_EMPTY:
-							SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Empty");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Empty");
 						break;
 						case SDL_JOYSTICK_POWER_UNKNOWN:
-							SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Unknown");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Unknown");
 						break;
 					}
 				break;
 				case SDL_CONTROLLER_BUTTON_A:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button A pressed on instance @%d",
 						event.cbutton.which);
 
@@ -210,76 +211,76 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 								"Error while playing rumble: %s",
 								SDL_GetError());
 						else
-							SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "RUMBLE");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "RUMBLE");
 					}
 				break;
 				case SDL_CONTROLLER_BUTTON_B:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button B pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_X:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button X pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_Y:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button Y pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_DPAD_UP:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button UP pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button DOWN pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button LEFT pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button RIGHT pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_GUIDE:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button GUIDE pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button LEFTSHOULDER pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button RIGHTSHOULDER pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_LEFTSTICK:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button LEFTSTICK pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button RIGHTSTICK pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_MAX:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button MAX pressed on instance @%d",
 						event.cbutton.which);
 				break;
 				case SDL_CONTROLLER_BUTTON_INVALID:
-					SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
+					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button INVALID pressed on instance @%d",
 						event.cbutton.which);
 				break;

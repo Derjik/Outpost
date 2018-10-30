@@ -14,6 +14,11 @@ using namespace std;
 
 /*
  * TODO:
+ * o Add abstraction layer at IEventHandler level
+ * o Add global and local millisecond-to-gametick ratio settings
+ * o Add EngineUpdate to IModel::elapse() signature
+ * o Rewrite Introspection API
+ * o Finish Exception / Logging integration
  * o Modularize menus
  * o Handle item placement
  *     TL T TR
