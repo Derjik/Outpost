@@ -1,12 +1,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_log.h>
 #include <VBN/Engine.hpp>
 #include <VBN/Introspection.hpp>
 #include <VBN/WindowManager.hpp>
 #include <VBN/GameControllerManager.hpp>
 #include <VBN/TrueTypeFontManager.hpp>
+#include <VBN/Logging.hpp>
 #include "Menu.hpp"
 #include "Platform.hpp"
 
@@ -18,14 +18,12 @@ using namespace std;
  * o Add global and local millisecond-to-gametick ratio settings
  * o Add EngineUpdate to IModel::elapse() signature
  * o Rewrite Introspection API
- * o Finish Exception / Logging integration
  * o Modularize menus
  * o Handle item placement
  *     TL T TR
  *     L  C  R
  *     BL B BR
  * o Implement zoom
- * o Implement layers (shade and stack contexts when drawing)
  * o (Maybe) improve text displaying (handle newline ?)
  */
 
