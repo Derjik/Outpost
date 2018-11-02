@@ -26,7 +26,7 @@ class GameContext : public IGameContext
 
 		void handleEvent(
 			SDL_Event const & event,
-			std::shared_ptr<EngineUpdate> response);
+			std::shared_ptr<EngineUpdate> engineUpdate);
 		void display(void);
 
 		void elapse(Uint32 const gameTicks,

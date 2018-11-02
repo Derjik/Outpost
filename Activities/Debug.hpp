@@ -2,10 +2,10 @@
 #define DEBUG_HPP_INCLUDED
 
 #include <map>
-#include "GameContext.hpp"
-#include "IModel.hpp"
-#include "IView.hpp"
-#include "IEventHandler.hpp"
+#include "../GameContext.hpp"
+#include "../IModel.hpp"
+#include "../IView.hpp"
+#include "../IEventHandler.hpp"
 
 class Debug
 {
@@ -35,7 +35,7 @@ class Debug
 		{
 			public:
 				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<EngineUpdate> response);
+					std::shared_ptr<EngineUpdate> engineUpdate);
 		};
 
 		class GameControllerEventHandler : public IEventHandler
@@ -48,8 +48,9 @@ class Debug
 				GameControllerEventHandler(
 					std::shared_ptr<Platform> platform,
 					std::shared_ptr<Model> model);
+				~GameControllerEventHandler(void);
 				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<EngineUpdate> response);
+					std::shared_ptr<EngineUpdate> engineUpdate);
 		};
 
 		class View : public IView

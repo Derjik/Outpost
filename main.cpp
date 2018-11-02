@@ -8,7 +8,7 @@
 #include <VBN/TrueTypeFontManager.hpp>
 #include <VBN/Logging.hpp>
 #include "GlobalHandler.hpp"
-#include "Menu.hpp"
+#include "Activities/Menu.hpp"
 #include "Platform.hpp"
 
 using namespace std;

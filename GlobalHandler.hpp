@@ -15,6 +15,7 @@ class GlobalHandler : public EventHandler
 			std::shared_ptr<IEventHandler> gameController,
 			std::shared_ptr<IEventHandler> joystick,
 			std::shared_ptr<IEventHandler> window);
+		~GlobalHandler(void);
 };
 
 #endif // GLOBAL_HANDLER_HPP_INCLUDED

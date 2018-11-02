@@ -3,6 +3,7 @@
 #include "KeyboardEventHandler.hpp"
 #include "GameControllerEventHandler.hpp"
 #include "WindowEventHandler.hpp"
+#include <VBN/Logging.hpp>
 
 GlobalHandler::GlobalHandler(
 	std::shared_ptr<Platform> platform,
@@ -16,4 +17,7 @@ GlobalHandler::GlobalHandler(
 		std::shared_ptr<IEventHandler>(new GameControllerEventHandler(platform, gameController)),
 		joystick,
 		std::shared_ptr<IEventHandler>(new WindowEventHandler(platform, window)))
+{}
+
+GlobalHandler::~GlobalHandler(void)
 {}

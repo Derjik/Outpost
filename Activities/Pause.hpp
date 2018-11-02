@@ -1,10 +1,10 @@
 #ifndef PAUSE_HPP_INCLUDED
 #define PAUSE_HPP_INCLUDED
 
-#include "GameContext.hpp"
-#include "IModel.hpp"
-#include "IView.hpp"
-#include "IEventHandler.hpp"
+#include "../GameContext.hpp"
+#include "../IModel.hpp"
+#include "../IView.hpp"
+#include "../IEventHandler.hpp"
 
 class Pause
 {

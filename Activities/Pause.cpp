@@ -1,5 +1,5 @@
 #include "Pause.hpp"
-#include "Platform.hpp"
+#include "../Platform.hpp"
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/WindowManager.hpp>
 

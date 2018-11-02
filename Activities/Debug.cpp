@@ -1,7 +1,7 @@
 #include "Pause.hpp"
 #include "Debug.hpp"
-#include "Platform.hpp"
-#include "EventHandler.hpp"
+#include "../Platform.hpp"
+#include "../GlobalHandler.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
@@ -139,12 +139,20 @@ Debug::GameControllerEventHandler::GameControllerEventHandler(
 	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
-{}
+{
+	DEBUG(SDL_LOG_CATEGORY_APPLICATION,
+		"New Debug::GCEH built @ %p", this);
+}
+
+Debug::GameControllerEventHandler::~GameControllerEventHandler(void)
+{
+	DEBUG(SDL_LOG_CATEGORY_APPLICATION,
+		"Deleting GCEH @ %p", this);
+}
 
 void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> update)
 {
-	DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Debug GCEH event");
 	SDL_Joystick * joystick(nullptr);
 	SDL_Haptic * haptic(nullptr);
 
@@ -163,7 +171,8 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 						std::shared_ptr<IView>(new Pause::View(_platform,
 							std::shared_ptr<IView>(new View(_platform, _model)))),
 						std::shared_ptr<IEventHandler>(
-							new EventHandler(
+							new GlobalHandler(
+								_platform,
 								nullptr,
 								nullptr,
 								std::shared_ptr<IEventHandler>(new Pause::GameControllerEventHandler),

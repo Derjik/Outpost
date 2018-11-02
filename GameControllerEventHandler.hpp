@@ -15,6 +15,7 @@ class GameControllerEventHandler : public IEventHandler
 	public:
 		GameControllerEventHandler(std::shared_ptr<Platform> platform,
 			std::shared_ptr<IEventHandler> subHandler);
+		~GameControllerEventHandler(void);
 		void handleEvent(SDL_Event const & event,
 			std::shared_ptr<EngineUpdate> engineUpdate);
 };

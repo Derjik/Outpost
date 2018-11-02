@@ -1,10 +1,10 @@
 #ifndef MENU_HPP_INCLUDED
 #define MENU_HPP_INCLUDED
 
-#include "GameContext.hpp"
-#include "IModel.hpp"
-#include "IView.hpp"
-#include "IEventHandler.hpp"
+#include "../GameContext.hpp"
+#include "../IModel.hpp"
+#include "../IView.hpp"
+#include "../IEventHandler.hpp"
 
 class WindowManager;
 
@@ -39,7 +39,7 @@ class Menu
 			private:
 				std::shared_ptr<Platform> _platform;
 				std::shared_ptr<Model> _model;
-				void perform(std::shared_ptr<EngineUpdate> response);
+				void perform(std::shared_ptr<EngineUpdate> engineUpdate);
 
 			public:
 				KeyboardEventHandler(std::shared_ptr<Platform> platform,

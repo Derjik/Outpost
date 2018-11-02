@@ -20,6 +20,7 @@ class EventHandler : public IEventHandler
 			std::shared_ptr<IEventHandler> gameController,
 			std::shared_ptr<IEventHandler> joystick,
 			std::shared_ptr<IEventHandler> window);
+		~EventHandler(void);
 
 		void handleEvent(SDL_Event const & event,
 			std::shared_ptr<EngineUpdate> engineUpdate);

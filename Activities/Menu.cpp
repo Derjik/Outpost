@@ -1,8 +1,8 @@
 #include "Menu.hpp"
 #include "Debug.hpp"
-#include "GlobalHandler.hpp"
-#include "KeyboardEventHandler.hpp"
-#include "GameControllerEventHandler.hpp"
+#include "../KeyboardEventHandler.hpp"
+#include "../GameControllerEventHandler.hpp"
+#include "../GlobalHandler.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 

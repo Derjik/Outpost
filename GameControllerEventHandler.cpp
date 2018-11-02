@@ -6,13 +6,16 @@
 GameControllerEventHandler::GameControllerEventHandler(
 	std::shared_ptr<Platform> platform,
 	std::shared_ptr<IEventHandler> subHandler) :
-	_platform(platform)
+	_platform(platform),
+	_subHandler(subHandler)
+{}
+
+GameControllerEventHandler::~GameControllerEventHandler(void)
 {}
 
 void GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
-	DEBUG(SDL_LOG_CATEGORY_INPUT, "Bleh");
 	switch(event.type)
 	{
 		case SDL_CONTROLLERDEVICEADDED:
