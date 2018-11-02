@@ -1,6 +1,8 @@
 #include "Menu.hpp"
 #include "Debug.hpp"
-#include "EventHandler.hpp"
+#include "GlobalHandler.hpp"
+#include "KeyboardEventHandler.hpp"
+#include "GameControllerEventHandler.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 
@@ -72,14 +74,19 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 				std::shared_ptr<IGameContext>(new GameContext(
 					_platform,
 					model,
-					std::shared_ptr<IView>(new Debug::View(_platform, model)),
-					std::shared_ptr<IEventHandler>(new EventHandler(
-						nullptr,
-						std::shared_ptr<IEventHandler>(new Debug::KeyboardEventHandler),
-						std::shared_ptr<IEventHandler>(new Debug::GameControllerEventHandler(_platform, model)),
-						nullptr,
-						nullptr))
-				)));
+					std::shared_ptr<IView>(
+						new Debug::View(_platform, model)),
+					std::shared_ptr<IEventHandler>(
+						new GlobalHandler(
+							_platform,
+							nullptr,
+							std::shared_ptr<IEventHandler>(
+								new Debug::KeyboardEventHandler),
+							std::shared_ptr<IEventHandler>(
+								new Debug::GameControllerEventHandler(_platform, model)),
+							nullptr,
+							nullptr))))
+				);
 		break;
 		case Model::START:
 			/*
@@ -166,7 +173,8 @@ void Menu::Model::setCurrentSelection(Menu::Model::Item selection)
 	_currentSelection = selection;
 }
 
-void Menu::Model::elapse(Uint32 const gameTicks)
+void Menu::Model::elapse(Uint32 const gameTicks,
+	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	if (_ascend && _selectionColor.b < 200)
 	{

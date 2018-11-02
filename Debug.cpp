@@ -10,7 +10,8 @@
 Debug::Model::Model(std::shared_ptr<Platform> platform) : _platform(platform)
 {}
 
-void Debug::Model::elapse(Uint32 const gameTicks)
+void Debug::Model::elapse(Uint32 const gameTicks,
+	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	SDL_GameController* contr(
 		_platform->getGameControllerManager()->getFirstController());
@@ -143,6 +144,7 @@ Debug::GameControllerEventHandler::GameControllerEventHandler(
 void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> update)
 {
+	DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Debug GCEH event");
 	SDL_Joystick * joystick(nullptr);
 	SDL_Haptic * haptic(nullptr);
 

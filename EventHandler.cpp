@@ -1,4 +1,5 @@
 #include "EventHandler.hpp"
+#include <VBN/Logging.hpp>
 
 EventHandler::EventHandler(
 	std::shared_ptr<IEventHandler> mouse,
@@ -58,8 +59,11 @@ void EventHandler::handleEvent(SDL_Event const & event,
 		case SDL_CONTROLLERDEVICEADDED:
 		case SDL_CONTROLLERDEVICEREMOVED:
 		case SDL_CONTROLLERDEVICEREMAPPED:
+			DEBUG(SDL_LOG_CATEGORY_INPUT, "Root");
 			if (_gameControllerEventHandler)
 				_gameControllerEventHandler->handleEvent(event, engineUpdate);
+			else
+				ERROR(SDL_LOG_CATEGORY_ERROR, "Null GC");
 		break;
 	}
 }

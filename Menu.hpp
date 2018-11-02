@@ -31,7 +31,7 @@ class Menu
 				Item getCurrentSelection(void);
 				void setCurrentSelection(Item);
 				SDL_Color getSelectionColor(void);
-				void elapse(Uint32 const);
+				void elapse(Uint32 const, std::shared_ptr<EngineUpdate>);
 		};
 
 		class KeyboardEventHandler : public IEventHandler

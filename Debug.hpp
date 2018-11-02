@@ -22,7 +22,8 @@ class Debug
 
 			public:
 				Model(std::shared_ptr<Platform> platform);
-				void elapse(Uint32 const gameTicks);
+				void elapse(Uint32 const gameTicks,
+					std::shared_ptr<EngineUpdate> engineUpdate);
 
 				std::pair<Sint16, Sint16> getLeftJoystick(void);
 				std::pair<Sint16, Sint16> getRightJoystick(void);

@@ -40,8 +40,9 @@ void GameContext::display(void)
 	SDL_RenderPresent(renderer);
 }
 
-void GameContext::elapse(Uint32 const gameTicks)
+void GameContext::elapse(Uint32 const gameTicks,
+	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	if(_model)
-		_model->elapse(gameTicks);
+		_model->elapse(gameTicks, engineUpdate);
 }

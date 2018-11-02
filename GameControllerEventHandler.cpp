@@ -12,6 +12,7 @@ GameControllerEventHandler::GameControllerEventHandler(
 void GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
+	DEBUG(SDL_LOG_CATEGORY_INPUT, "Bleh");
 	switch(event.type)
 	{
 		case SDL_CONTROLLERDEVICEADDED:

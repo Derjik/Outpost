@@ -29,7 +29,8 @@ class GameContext : public IGameContext
 			std::shared_ptr<EngineUpdate> response);
 		void display(void);
 
-		void elapse(Uint32 const gameTicks);
+		void elapse(Uint32 const gameTicks,
+			std::shared_ptr<EngineUpdate> engineUpdate);
 };
 
 #endif // GAME_CONTEXT_HPP_INCLUDED

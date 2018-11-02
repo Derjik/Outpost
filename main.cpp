@@ -7,7 +7,7 @@
 #include <VBN/GameControllerManager.hpp>
 #include <VBN/TrueTypeFontManager.hpp>
 #include <VBN/Logging.hpp>
-#include "EventHandler.hpp"
+#include "GlobalHandler.hpp"
 #include "Menu.hpp"
 #include "Platform.hpp"
 
@@ -15,9 +15,9 @@ using namespace std;
 
 /*
  * TODO:
- * o Add abstraction layer at IEventHandler level
  * o Add global and local millisecond-to-gametick ratio settings
  * o Add EngineUpdate to IModel::elapse() signature
+ * o Improve text displaying API
  * o Rewrite Introspection API
  * o Modularize menus
  * o Handle item placement
@@ -25,7 +25,6 @@ using namespace std;
  *     L  C  R
  *     BL B BR
  * o Implement zoom
- * o (Maybe) improve text displaying (handle newline ?)
  */
 
 int main(int argc, char ** argv)
@@ -61,7 +60,8 @@ int main(int argc, char ** argv)
 			menuModel,
 			std::shared_ptr<IView>(new Menu::View(menuModel, platform->getWindowManager())),
 			std::shared_ptr<IEventHandler>(
-				new EventHandler(
+				new GlobalHandler(
+					platform,
 					nullptr,
 					std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(platform, menuModel)),
 					nullptr,
