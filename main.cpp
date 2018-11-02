@@ -7,6 +7,7 @@
 #include <VBN/GameControllerManager.hpp>
 #include <VBN/TrueTypeFontManager.hpp>
 #include <VBN/Logging.hpp>
+#include "EventHandler.hpp"
 #include "Menu.hpp"
 #include "Platform.hpp"
 
@@ -59,10 +60,14 @@ int main(int argc, char ** argv)
 			platform,
 			menuModel,
 			std::shared_ptr<IView>(new Menu::View(menuModel, platform->getWindowManager())),
-			std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(platform, menuModel)),
-			nullptr,
-			nullptr,
-			nullptr));
+			std::shared_ptr<IEventHandler>(
+				new EventHandler(
+					nullptr,
+					std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(platform, menuModel)),
+					nullptr,
+					nullptr,
+					nullptr))
+		));
 
 		std::shared_ptr<Engine> engine(new Engine(menu));
 		engine->run(0.01);

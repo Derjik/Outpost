@@ -1,5 +1,6 @@
 #include "Menu.hpp"
 #include "Debug.hpp"
+#include "EventHandler.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 
@@ -72,10 +73,13 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 					_platform,
 					model,
 					std::shared_ptr<IView>(new Debug::View(_platform, model)),
-					std::shared_ptr<IEventHandler>(new Debug::KeyboardEventHandler),
-					std::shared_ptr<IEventHandler>(new Debug::GameControllerEventHandler(_platform, model)),
-					nullptr,
-					nullptr)));
+					std::shared_ptr<IEventHandler>(new EventHandler(
+						nullptr,
+						std::shared_ptr<IEventHandler>(new Debug::KeyboardEventHandler),
+						std::shared_ptr<IEventHandler>(new Debug::GameControllerEventHandler(_platform, model)),
+						nullptr,
+						nullptr))
+				)));
 		break;
 		case Model::START:
 			/*

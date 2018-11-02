@@ -1,6 +1,7 @@
 #include "Pause.hpp"
 #include "Debug.hpp"
 #include "Platform.hpp"
+#include "EventHandler.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
@@ -159,11 +160,13 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 						nullptr,
 						std::shared_ptr<IView>(new Pause::View(_platform,
 							std::shared_ptr<IView>(new View(_platform, _model)))),
-						nullptr,
 						std::shared_ptr<IEventHandler>(
-							new Pause::GameControllerEventHandler),
-						nullptr,
-						nullptr)));
+							new EventHandler(
+								nullptr,
+								nullptr,
+								std::shared_ptr<IEventHandler>(new Pause::GameControllerEventHandler),
+								nullptr,
+								nullptr)))));
 				break;
 				case SDL_CONTROLLER_BUTTON_BACK:
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
