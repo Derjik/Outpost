@@ -1,8 +1,6 @@
 #include "Menu.hpp"
+#include "Global.hpp"
 #include "Debug.hpp"
-#include "../KeyboardEventHandler.hpp"
-#include "../GameControllerEventHandler.hpp"
-#include "../GlobalHandler.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 
@@ -77,7 +75,7 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 					std::shared_ptr<IView>(
 						new Debug::View(_platform, model)),
 					std::shared_ptr<IEventHandler>(
-						new GlobalHandler(
+						new Global::EventHandler(
 							_platform,
 							nullptr,
 							std::shared_ptr<IEventHandler>(

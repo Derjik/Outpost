@@ -7,8 +7,8 @@
 #include <VBN/GameControllerManager.hpp>
 #include <VBN/TrueTypeFontManager.hpp>
 #include <VBN/Logging.hpp>
-#include "GlobalHandler.hpp"
 #include "Activities/Menu.hpp"
+#include "Activities/Global.hpp"
 #include "Platform.hpp"
 
 using namespace std;
@@ -60,7 +60,7 @@ int main(int argc, char ** argv)
 			menuModel,
 			std::shared_ptr<IView>(new Menu::View(menuModel, platform->getWindowManager())),
 			std::shared_ptr<IEventHandler>(
-				new GlobalHandler(
+				new Global::EventHandler(
 					platform,
 					nullptr,
 					std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(platform, menuModel)),

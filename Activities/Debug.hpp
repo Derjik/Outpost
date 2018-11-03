@@ -2,7 +2,6 @@
 #define DEBUG_HPP_INCLUDED
 
 #include <map>
-#include "../GameContext.hpp"
 #include "../IModel.hpp"
 #include "../IView.hpp"
 #include "../IEventHandler.hpp"

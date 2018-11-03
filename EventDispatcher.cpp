@@ -1,7 +1,7 @@
-#include "EventHandler.hpp"
+#include "EventDispatcher.hpp"
 #include <VBN/Logging.hpp>
 
-EventHandler::EventHandler(
+EventDispatcher::EventDispatcher(
 	std::shared_ptr<IEventHandler> mouse,
 	std::shared_ptr<IEventHandler> keyboard,
 	std::shared_ptr<IEventHandler> gameController,
@@ -14,10 +14,10 @@ EventHandler::EventHandler(
 	_windowEventHandler(window)
 {}
 
-EventHandler::~EventHandler(void)
+EventDispatcher::~EventDispatcher(void)
 {}
 
-void EventHandler::handleEvent(SDL_Event const & event,
+void EventDispatcher::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	switch(event.type)

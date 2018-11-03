@@ -1,7 +1,8 @@
 #include "Pause.hpp"
 #include "Debug.hpp"
 #include "../Platform.hpp"
-#include "../GlobalHandler.hpp"
+#include "../GameContext.hpp"
+#include "Global.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
@@ -171,7 +172,7 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 						std::shared_ptr<IView>(new Pause::View(_platform,
 							std::shared_ptr<IView>(new View(_platform, _model)))),
 						std::shared_ptr<IEventHandler>(
-							new GlobalHandler(
+							new Global::EventHandler(
 								_platform,
 								nullptr,
 								nullptr,
