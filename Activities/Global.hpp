@@ -1,6 +1,7 @@
 #ifndef GLOBAL_HPP_INCLUDED
 #define GLOBAL_HPP_INCLUDED
 
+#include "../IView.hpp"
 #include "../EventDispatcher.hpp"
 
 class Platform;
@@ -8,6 +9,18 @@ class Platform;
 class Global
 {
 	public:
+		class View : public IView
+		{
+			private:
+				std::shared_ptr<Platform> _platform;
+				std::shared_ptr<IView> _subView;
+
+			public:
+				View(std::shared_ptr<Platform> platform,
+					std::shared_ptr<IView> subView);
+				void display(void);
+		};
+
 		class EventHandler : public EventDispatcher
 		{
 			public:

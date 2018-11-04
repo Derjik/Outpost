@@ -5,6 +5,26 @@
 #include <VBN/Window.hpp>
 #include <VBN/Logging.hpp>
 
+Global::View::View(std::shared_ptr<Platform> platform,
+	std::shared_ptr<IView> subView) :
+	_platform(platform),
+	_subView(subView)
+{}
+
+void Global::View::display(void)
+{
+	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
+	SDL_Renderer * renderer(mainWindow.getRenderer());
+
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+
+	if (_subView)
+		_subView->display();
+
+	SDL_RenderPresent(renderer);
+}
+
 Global::EventHandler::EventHandler(
 	std::shared_ptr<Platform> platform,
 	std::shared_ptr<IEventHandler> mouse,

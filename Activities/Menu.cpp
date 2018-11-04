@@ -72,8 +72,10 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 				std::shared_ptr<IGameContext>(new GameContext(
 					_platform,
 					model,
-					std::shared_ptr<IView>(
-						new Debug::View(_platform, model)),
+					std::shared_ptr<IView>(new Global::View(
+							_platform,
+							std::shared_ptr<IView>(
+								new Debug::View(_platform, model)))),
 					std::shared_ptr<IEventHandler>(
 						new Global::EventHandler(
 							_platform,
@@ -81,7 +83,8 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 							std::shared_ptr<IEventHandler>(
 								new Debug::KeyboardEventHandler),
 							std::shared_ptr<IEventHandler>(
-								new Debug::GameControllerEventHandler(_platform, model)),
+								new Debug::GameControllerEventHandler(
+									_platform, model)),
 							nullptr,
 							nullptr))))
 				);

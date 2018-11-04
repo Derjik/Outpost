@@ -1,8 +1,8 @@
 #include "Pause.hpp"
 #include "Debug.hpp"
+#include "Global.hpp"
 #include "../Platform.hpp"
 #include "../GameContext.hpp"
-#include "Global.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
@@ -166,11 +166,16 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button START pressed on instance @%d",
 						event.cbutton.which);
-					update->pushGameContext(std::shared_ptr<IGameContext>(new GameContext(
+					update->pushGameContext(
+						std::shared_ptr<IGameContext>(new GameContext(
 						_platform,
 						nullptr,
-						std::shared_ptr<IView>(new Pause::View(_platform,
-							std::shared_ptr<IView>(new View(_platform, _model)))),
+						std::shared_ptr<IView>(new Pause::View(
+							_platform,
+							std::shared_ptr<IView>(new Global::View(
+								_platform,
+								std::shared_ptr<IView>(new View(
+									_platform, _model)))))),
 						std::shared_ptr<IEventHandler>(
 							new Global::EventHandler(
 								_platform,

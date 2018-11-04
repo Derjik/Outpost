@@ -58,12 +58,15 @@ int main(int argc, char ** argv)
 		std::shared_ptr<GameContext> menu(new GameContext(
 			platform,
 			menuModel,
-			std::shared_ptr<IView>(new Menu::View(menuModel, platform->getWindowManager())),
-			std::shared_ptr<IEventHandler>(
-				new Global::EventHandler(
+			std::shared_ptr<IView>(new Global::View(
+					platform,
+					std::shared_ptr<IView>(new Menu::View(
+						menuModel, platform->getWindowManager())))),
+			std::shared_ptr<IEventHandler>(new Global::EventHandler(
 					platform,
 					nullptr,
-					std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(platform, menuModel)),
+					std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(
+						platform, menuModel)),
 					nullptr,
 					nullptr,
 					nullptr))

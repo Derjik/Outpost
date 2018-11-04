@@ -28,16 +28,8 @@ void GameContext::handleEvent(SDL_Event const & event,
 
 void GameContext::display(void)
 {
-	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow.getRenderer());
-
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
-
 	if (_view)
 		_view->display();
-
-	SDL_RenderPresent(renderer);
 }
 
 void GameContext::elapse(Uint32 const gameTicks,
