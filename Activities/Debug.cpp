@@ -79,7 +79,20 @@ Debug::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
-{}
+{
+	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
+	mainWindow.addImageTexture("XBOX", "xbox_controller.png");
+
+	Texture & controller = mainWindow.getTexture("XBOX");
+	controller.addClip("A", { 878, 55, 78, 78 });
+	controller.addClip("B", { 1038, 55, 78, 78 });
+	controller.addClip("X", { 798, 55, 78, 78 });
+	controller.addClip("Y", { 958, 55, 78, 78 });
+	controller.addClip("BACK", { 491, 44, 81, 77 });
+	controller.addClip("START", { 712, 44, 84, 77 });
+	controller.addClip("GUIDE", { 574, 24, 136, 138 });
+	controller.addClip("DPAD", { 154, 1, 184, 186 });
+}
 
 void Debug::View::display(void)
 {
@@ -117,6 +130,53 @@ void Debug::View::display(void)
 	SDL_Rect rightr{ 600, 400, 3, rtrigger };
 	SDL_RenderFillRect(renderer, &leftr);
 	SDL_RenderFillRect(renderer, &rightr);
+
+	Uint32
+		buttonsXOffset(500), buttonsYOffset(150),
+		dpadXOffset(250), dpadYOffset(150);
+
+	Texture & controller = mainWindow.getTexture("XBOX");
+	SDL_Rect
+		aDest{ buttonsXOffset + 300, buttonsYOffset + 200, 78, 78 },
+		bDest{ buttonsXOffset + 378, buttonsYOffset + 122, 78, 78 },
+		xDest{ buttonsXOffset + 222, buttonsYOffset + 122, 78, 78 },
+		yDest{ buttonsXOffset + 300, buttonsYOffset + 44, 78, 78 };
+
+	SDL_Rect dpadDest{ dpadXOffset, dpadYOffset, 184, 186 };
+
+	SDL_Rect upRect{ dpadXOffset + 49, dpadYOffset, 86, 66 };
+
+	if(_model->getButton("A"))
+		SDL_RenderCopy(renderer,
+			mainWindow.getTexture("XBOX").getRawTexture(),
+			controller.getClip("A"), &aDest);
+
+	if (_model->getButton("B"))
+		SDL_RenderCopy(renderer,
+			mainWindow.getTexture("XBOX").getRawTexture(),
+			controller.getClip("B"), &bDest);
+
+	if (_model->getButton("X"))
+		SDL_RenderCopy(renderer,
+			mainWindow.getTexture("XBOX").getRawTexture(),
+			controller.getClip("X"), &xDest);
+
+	if (_model->getButton("Y"))
+		SDL_RenderCopy(renderer,
+			mainWindow.getTexture("XBOX").getRawTexture(),
+			controller.getClip("Y"), &yDest);
+
+	if (_model->getButton("UP") ||
+		_model->getButton("DOWN") ||
+		_model->getButton("LEFT") ||
+		_model->getButton("RIGHT"))
+		SDL_RenderCopy(renderer,
+			mainWindow.getTexture("XBOX").getRawTexture(),
+			controller.getClip("DPAD"), &dpadDest);
+
+	SDL_SetRenderDrawColor(renderer, 200, 20, 20, 255);
+	if(_model->getButton("UP"))
+		SDL_RenderDrawRect(renderer, &upRect);
 }
 
 void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
