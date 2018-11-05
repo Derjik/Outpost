@@ -2,9 +2,9 @@
 #define MENU_HPP_INCLUDED
 
 #include "../GameContext.hpp"
-#include "../IModel.hpp"
-#include "../IView.hpp"
-#include "../IEventHandler.hpp"
+#include <VBN/IModel.hpp>
+#include <VBN/IView.hpp>
+#include <VBN/IEventHandler.hpp>
 
 class WindowManager;
 

@@ -1,8 +1,8 @@
 #ifndef GLOBAL_HPP_INCLUDED
 #define GLOBAL_HPP_INCLUDED
 
-#include "../IView.hpp"
-#include "../EventDispatcher.hpp"
+#include <VBN/IView.hpp>
+#include <VBN/EventDispatcher.hpp>
 
 class Platform;
 

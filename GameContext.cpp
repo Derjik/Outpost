@@ -1,8 +1,8 @@
 #include "GameContext.hpp"
 #include "Platform.hpp"
-#include "IEventHandler.hpp"
-#include "IView.hpp"
-#include "IModel.hpp"
+#include <VBN/IModel.hpp>
+#include <VBN/IView.hpp>
+#include <VBN/IEventHandler.hpp>
 
 #include <VBN/Logging.hpp>
 #include <VBN/WindowManager.hpp>
