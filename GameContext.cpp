@@ -1,5 +1,5 @@
 #include "GameContext.hpp"
-#include "Platform.hpp"
+#include <VBN/Platform.hpp>
 #include <VBN/IModel.hpp>
 #include <VBN/IView.hpp>
 #include <VBN/IEventHandler.hpp>

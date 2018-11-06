@@ -9,7 +9,7 @@
 #include <VBN/Logging.hpp>
 #include "Activities/Menu.hpp"
 #include "Activities/Global.hpp"
-#include "Platform.hpp"
+#include <VBN/Platform.hpp>
 
 using namespace std;
 

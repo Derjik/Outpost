@@ -1,7 +1,7 @@
 #include "Pause.hpp"
 #include "Debug.hpp"
 #include "Global.hpp"
-#include "../Platform.hpp"
+#include <VBN/Platform.hpp>
 #include "../GameContext.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
@@ -200,16 +200,10 @@ Debug::GameControllerEventHandler::GameControllerEventHandler(
 	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
-{
-	DEBUG(SDL_LOG_CATEGORY_APPLICATION,
-		"New Debug::GCEH built @ %p", this);
-}
+{}
 
 Debug::GameControllerEventHandler::~GameControllerEventHandler(void)
-{
-	DEBUG(SDL_LOG_CATEGORY_APPLICATION,
-		"Deleting GCEH @ %p", this);
-}
+{}
 
 void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> update)

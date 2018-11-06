@@ -1,5 +1,5 @@
 #include "Global.hpp"
-#include "../Platform.hpp"
+#include <VBN/Platform.hpp>
 #include <VBN/GameControllerManager.hpp>
 #include <VBN/WindowManager.hpp>
 #include <VBN/Window.hpp>
