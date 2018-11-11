@@ -11,15 +11,15 @@ Pause::View::View(std::shared_ptr<Platform> platform,
 
 void Pause::View::display(void)
 {
-	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow.getRenderer());
+	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
+	SDL_Renderer * renderer(mainWindow->getRenderer());
 
 	_background->display();
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
 	SDL_RenderFillRect(renderer, nullptr);
 
-	mainWindow.printText(
+	mainWindow->printText(
 		"PAUSE",
 		"courier", 40,
 		{ 255, 255, 255, 255 },

@@ -109,15 +109,15 @@ Menu::View::View(std::shared_ptr<Model> model,
 
 void Menu::View::display(void)
 {
-	Window & mainWindow = _windowManager->getByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow.getRenderer());
+	Window * mainWindow = _windowManager->getWindowByName("mainWindow");
+	SDL_Renderer * renderer(mainWindow->getRenderer());
 
 	/* Clear draw area with blue */
 	SDL_SetRenderDrawColor(renderer, 0, 0, 32, 255);
 	SDL_RenderFillRect(renderer, nullptr);
 
 	/* Print menu name */
-	mainWindow.printText("Menu", "courier",
+	mainWindow->printText("Menu", "courier",
 		20, {200, 200, 200, 255}, {0, 0, 200, 32});
 
 	SDL_Rect menuItems[3];
@@ -128,11 +128,11 @@ void Menu::View::display(void)
 	SDL_Color menuColor{ 200, 200, 200, 255 };
 
 	/* Print menu items */
-	mainWindow.printText("Debug", "courier",
+	mainWindow->printText("Debug", "courier",
 		20, menuColor, menuItems[0]);
-	mainWindow.printText("Start", "courier",
+	mainWindow->printText("Start", "courier",
 		20, menuColor, menuItems[1]);
-	mainWindow.printText("Exit", "courier",
+	mainWindow->printText("Exit", "courier",
 		20, menuColor, menuItems[2]);
 
 	/* Highlight selection */

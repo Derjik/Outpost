@@ -93,15 +93,15 @@ Debug::View::View(std::shared_ptr<Platform> platform,
 	_platform(platform),
 	_model(model)
 {
-	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
+	Window * mainWindow(_platform->getWindowManager()->getWindowByName("mainWindow"));
 
-	if (!mainWindow.hasTexture(XBOX_CONTROLLER_TEXTURE_NAME))
+	if (!mainWindow->hasTexture(XBOX_CONTROLLER_TEXTURE_NAME))
 	{
-		mainWindow.addImageTexture(
+		mainWindow->addImageTexture(
 			XBOX_CONTROLLER_TEXTURE_NAME,
 			XBOX_CONTROLLER_TEXTURE_PATH);
 
-		Texture & controller = mainWindow.getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
+		Texture & controller = mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
 		controller.addClip("A", { 878, 55, 78, 78 });
 		controller.addClip("B", { 1038, 55, 78, 78 });
 		controller.addClip("X", { 798, 55, 78, 78 });
@@ -115,8 +115,8 @@ Debug::View::View(std::shared_ptr<Platform> platform,
 
 void Debug::View::display(void)
 {
-	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow.getRenderer());
+	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
+	SDL_Renderer * renderer(mainWindow->getRenderer());
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 32, 255);
 	SDL_RenderClear(renderer);
@@ -128,7 +128,7 @@ void Debug::View::display(void)
 		ltrigger(_model->getTriggers().first),
 		rtrigger(_model->getTriggers().second);
 
-	mainWindow.printText("DEBUG", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
+	mainWindow->printText("DEBUG", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
 
 	SDL_Rect lxr{ 200, 199, leftx, 3 };
 	SDL_Rect lyr{ 199, 200, 3, lefty };
@@ -154,7 +154,7 @@ void Debug::View::display(void)
 		buttonsXOffset(500), buttonsYOffset(150),
 		dpadXOffset(250), dpadYOffset(150);
 
-	Texture & controller = mainWindow.getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
+	Texture & controller = mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
 	SDL_Rect
 		aDest{ buttonsXOffset + 300, buttonsYOffset + 200, 78, 78 },
 		bDest{ buttonsXOffset + 378, buttonsYOffset + 122, 78, 78 },
@@ -167,22 +167,22 @@ void Debug::View::display(void)
 
 	if(_model->getButton("A"))
 		SDL_RenderCopy(renderer,
-			mainWindow.getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
+			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
 			controller.getClip("A"), &aDest);
 
 	if (_model->getButton("B"))
 		SDL_RenderCopy(renderer,
-			mainWindow.getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
+			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
 			controller.getClip("B"), &bDest);
 
 	if (_model->getButton("X"))
 		SDL_RenderCopy(renderer,
-			mainWindow.getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
+			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
 			controller.getClip("X"), &xDest);
 
 	if (_model->getButton("Y"))
 		SDL_RenderCopy(renderer,
-			mainWindow.getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
+			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
 			controller.getClip("Y"), &yDest);
 
 	if (_model->getButton("UP") ||
@@ -190,7 +190,7 @@ void Debug::View::display(void)
 		_model->getButton("LEFT") ||
 		_model->getButton("RIGHT"))
 		SDL_RenderCopy(renderer,
-			mainWindow.getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
+			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
 			controller.getClip("DPAD"), &dpadDest);
 
 	SDL_SetRenderDrawColor(renderer, 200, 20, 20, 255);

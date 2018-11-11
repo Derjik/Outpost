@@ -13,8 +13,8 @@ Global::View::View(std::shared_ptr<Platform> platform,
 
 void Global::View::display(void)
 {
-	Window & mainWindow = _platform->getWindowManager()->getByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow.getRenderer());
+	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
+	SDL_Renderer * renderer(mainWindow->getRenderer());
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
@@ -50,13 +50,13 @@ void Global::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	Uint32 keyEvType = event.key.type;
-	Window & mainWindow(_platform->getWindowManager()->getByName("mainWindow"));
+	Window * mainWindow(_platform->getWindowManager()->getWindowByName("mainWindow"));
 
 	switch(event.key.keysym.sym)
 	{
 		case SDLK_F11:
 			if(keyEvType == SDL_KEYDOWN)
-				mainWindow.toggleFullscreen();
+				mainWindow->toggleFullscreen();
 		break;
 	}
 
@@ -148,20 +148,22 @@ Global::WindowEventHandler::WindowEventHandler(
 void Global::WindowEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
-	std::string windowName("");
-	SDL_Window * address(nullptr);
+	Window * window(nullptr);
 
 	switch (event.window.event)
 	{
 		case SDL_WINDOWEVENT_SIZE_CHANGED:
-			address = SDL_GetWindowFromID(event.window.windowID);
-			windowName = _platform->getWindowManager()->getWindowNameByAddress(address);
+			window = _platform
+				->getWindowManager()
+				->getWindowById(event.window.windowID);
 
 			DEBUG(SDL_LOG_CATEGORY_APPLICATION,
-				"Window '%s' (ID: %d) changed size to %dx%d",
-				windowName.c_str(), _platform->getWindowManager()->getByAddress(address).getId(),
-				event.window.data1, event.window.data2);
-			_platform->getWindowManager()->getByAddress(address).handleResize();
+				"Window (ID: %d) changed size to %dx%d",
+				window->getId(),
+				event.window.data1,
+				event.window.data2);
+
+			window->handleResize();
 		break;
 		default:
 			if (_subHandler)
