@@ -35,7 +35,7 @@ Global::EventHandler::EventHandler(
 	EventDispatcher(mouse,
 		std::shared_ptr<IEventHandler>(new Global::KeyboardEventHandler(platform, keyboard)),
 		std::shared_ptr<IEventHandler>(new Global::GameControllerEventHandler(platform, gameController)),
-		joystick,
+		std::shared_ptr<IEventHandler>(new Global::JoystickEventHandler(platform, joystick)),
 		std::shared_ptr<IEventHandler>(new Global::WindowEventHandler(platform, window)))
 {}
 
@@ -78,7 +78,8 @@ void Global::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	{
 		case SDL_CONTROLLERDEVICEADDED:
 			INFO(SDL_LOG_CATEGORY_INPUT,
-				"Device #%d added", event.cdevice.which);
+				"Device #%d added",
+				event.cdevice.which);
 
 			_platform
 				->getGameControllerManager()
@@ -86,7 +87,8 @@ void Global::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 		break;
 		case SDL_CONTROLLERDEVICEREMOVED:
 			INFO(SDL_LOG_CATEGORY_INPUT,
-				"Instance @%d removed", event.cdevice.which);
+				"Instance @%d removed",
+				event.cdevice.which);
 
 			_platform
 				->getGameControllerManager()
@@ -94,9 +96,41 @@ void Global::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 		break;
 
 		case SDL_CONTROLLERDEVICEREMAPPED:
-			INFO(SDL_LOG_CATEGORY_INPUT, "A GameController was remapped");
+			INFO(SDL_LOG_CATEGORY_INPUT,
+				"Instance @%d was remapped",
+				event.cdevice.which);
 		break;
 
+		default:
+			if (_subHandler)
+				_subHandler->handleEvent(event, engineUpdate);
+		break;
+	}
+}
+
+Global::JoystickEventHandler::JoystickEventHandler(
+	std::shared_ptr<Platform> platform,
+	std::shared_ptr<IEventHandler> subHandler) :
+	_platform(platform),
+	_subHandler(subHandler)
+{}
+
+void Global::JoystickEventHandler::handleEvent(
+	SDL_Event const & event,
+	std::shared_ptr<EngineUpdate> engineUpdate)
+{
+	switch (event.type)
+	{
+		case SDL_JOYDEVICEADDED:
+			INFO(SDL_LOG_CATEGORY_INPUT,
+				"Device #%d added",
+				event.jdevice.which);
+		break;
+		case SDL_JOYDEVICEREMOVED:
+			INFO(SDL_LOG_CATEGORY_INPUT,
+				"Instance @%d added",
+				event.jdevice.which);
+		break;
 		default:
 			if (_subHandler)
 				_subHandler->handleEvent(event, engineUpdate);

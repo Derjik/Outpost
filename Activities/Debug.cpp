@@ -17,45 +17,55 @@ Debug::Model::Model(std::shared_ptr<Platform> platform) : _platform(platform)
 void Debug::Model::elapse(Uint32 const gameTicks,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
-	SDL_GameController* contr(
-		_platform->getGameControllerManager()->getFirstController());
+	std::shared_ptr<GameControllerManager> gameControllerManager =
+		_platform->getGameControllerManager();
 
-	_leftJoystick.first =
-		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_LEFTX) / 256;
+	GameController * gameController(nullptr);
+	SDL_GameController * sdlController(nullptr);
 
-	_leftJoystick.second =
-		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_LEFTY) / 256;
+	gameController = gameControllerManager->getControllerFromDeviceID(0);
+	if(gameController)
+		sdlController = gameController->getSDLGameController();
 
-	_rightJoystick.first =
-		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_RIGHTX) / 256;
+	if (sdlController)
+	{
+		_leftJoystick.first =
+			SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_LEFTX) / 256;
 
-	_rightJoystick.second =
-		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_RIGHTY) / 256;
+		_leftJoystick.second =
+			SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_LEFTY) / 256;
 
-	_triggers.first =
-		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_TRIGGERLEFT) / 256;
+		_rightJoystick.first =
+			SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_RIGHTX) / 256;
 
-	_triggers.second =
-		SDL_GameControllerGetAxis(contr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) / 256;
+		_rightJoystick.second =
+			SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_RIGHTY) / 256;
 
-	_buttons["A"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_A);
-	_buttons["B"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_B);
-	_buttons["X"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_X);
-	_buttons["Y"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_Y);
+		_triggers.first =
+			SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_TRIGGERLEFT) / 256;
 
-	_buttons["UP"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_DPAD_UP);
-	_buttons["DOWN"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_DPAD_DOWN);
-	_buttons["LEFT"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
-	_buttons["RIGHT"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+		_triggers.second =
+			SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) / 256;
 
-	_buttons["LSTICK"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_LEFTSTICK);
-	_buttons["RSTICK"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
-	_buttons["LSHOULDER"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_LEFTSTICK);
-	_buttons["RSHOULDER"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+		_buttons["A"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_A);
+		_buttons["B"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_B);
+		_buttons["X"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_X);
+		_buttons["Y"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_Y);
 
-	_buttons["START"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_START);
-	_buttons["BACK"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_BACK);
-	_buttons["GUIDE"] = SDL_GameControllerGetButton(contr, SDL_CONTROLLER_BUTTON_GUIDE);
+		_buttons["UP"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_DPAD_UP);
+		_buttons["DOWN"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_DPAD_DOWN);
+		_buttons["LEFT"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+		_buttons["RIGHT"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+
+		_buttons["LSTICK"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_LEFTSTICK);
+		_buttons["RSTICK"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+		_buttons["LSHOULDER"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_LEFTSTICK);
+		_buttons["RSHOULDER"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+
+		_buttons["START"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_START);
+		_buttons["BACK"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_BACK);
+		_buttons["GUIDE"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_GUIDE);
+	}
 }
 
 std::pair<Sint16, Sint16> Debug::Model::getLeftJoystick(void)
@@ -189,7 +199,7 @@ void Debug::View::display(void)
 }
 
 void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
-	std::shared_ptr<EngineUpdate> response)
+	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	switch(event.type)
 	{
@@ -197,7 +207,7 @@ void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 			switch(event.key.keysym.sym)
 			{
 				case SDLK_ESCAPE:
-					response->popGameContext();
+					engineUpdate->popGameContext();
 				break;
 			}
 		break;
@@ -217,8 +227,19 @@ Debug::GameControllerEventHandler::~GameControllerEventHandler(void)
 void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> update)
 {
+	GameController * controller(nullptr);
 	SDL_Joystick * joystick(nullptr);
 	SDL_Haptic * haptic(nullptr);
+
+	controller = _platform
+		->getGameControllerManager()
+		->getControllerFromDeviceID(0);
+
+	if (controller)
+	{
+		joystick = controller->getSDLJoystick();
+		haptic = controller->getSDLHaptic();
+	}
 
 	switch (event.type)
 	{
@@ -252,29 +273,28 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button BACK pressed on instance @%d",
 						event.cbutton.which);
-					joystick = SDL_JoystickFromInstanceID(event.cbutton.which);
 					switch (SDL_JoystickCurrentPowerLevel(joystick))
 					{
 						case SDL_JOYSTICK_POWER_WIRED:
-							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Wired");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Battery status : Wired");
 						break;
 						case SDL_JOYSTICK_POWER_MAX:
-							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Max");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Battery status : Max");
 						break;
 						case SDL_JOYSTICK_POWER_FULL:
-							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Full");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Battery status : Full");
 						break;
 						case SDL_JOYSTICK_POWER_MEDIUM:
-							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Medium");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Battery status : Medium");
 						break;
 						case SDL_JOYSTICK_POWER_LOW:
-							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Low");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Battery status : Low");
 						break;
 						case SDL_JOYSTICK_POWER_EMPTY:
-							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Empty");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Battery status : Empty");
 						break;
 						case SDL_JOYSTICK_POWER_UNKNOWN:
-							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Unknown");
+							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "Battery status : Unknown");
 						break;
 					}
 				break;
@@ -282,20 +302,8 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button A pressed on instance @%d",
 						event.cbutton.which);
-
-					haptic = _platform
-							->getGameControllerManager()
-							->getHapticFromInstance(event.cbutton.which);
-
-					if (haptic && SDL_HapticRumbleSupported(haptic))
-					{
-						if (SDL_HapticRumblePlay(haptic, 1, 2500))
-							SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-								"Error while playing rumble: %s",
-								SDL_GetError());
-						else
-							DEBUG(SDL_LOG_CATEGORY_APPLICATION, "RUMBLE");
-					}
+					if (controller)
+						controller->rumble(1.f, 2500);
 				break;
 				case SDL_CONTROLLER_BUTTON_B:
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,

@@ -12,7 +12,7 @@ Menu::KeyboardEventHandler::KeyboardEventHandler(
 {}
 
 void Menu::KeyboardEventHandler::handleEvent(SDL_Event const & event,
-	std::shared_ptr<EngineUpdate> response)
+	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	switch(event.type)
 	{
@@ -48,18 +48,18 @@ void Menu::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 					}
 				break;
 				case SDLK_RETURN:
-					perform(response);
+					perform(engineUpdate);
 				break;
 				case SDLK_ESCAPE:
 					_model->setCurrentSelection(Model::EXIT);
-					perform(response);
+					perform(engineUpdate);
 				break;
 			}
 		break;
 	}
 }
 
-void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
+void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	std::shared_ptr<Debug::Model> model(nullptr);
 
@@ -68,7 +68,7 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 		case Model::DEBUG:
 			model = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
 
-			response->pushGameContext(
+			engineUpdate->pushGameContext(
 				std::shared_ptr<IGameContext>(new GameContext(
 					_platform,
 					model,
@@ -91,12 +91,12 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> response)
 		break;
 		case Model::START:
 			/*
-			response->pushGameContext(std::shared_ptr<IGameContext>(
+			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
 				new GCGame(_windowManager, _gameControllerManager)));
 			*/
 		break;
 		case Model::EXIT:
-			response->popGameContext();
+			engineUpdate->popGameContext();
 		break;
 	}
 }

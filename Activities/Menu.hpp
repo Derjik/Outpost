@@ -45,7 +45,7 @@ class Menu
 				KeyboardEventHandler(std::shared_ptr<Platform> platform,
 									std::shared_ptr<Model> model);
 				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<EngineUpdate> response);
+					std::shared_ptr<EngineUpdate> engineUpdate);
 		};
 
 		class View : public IView

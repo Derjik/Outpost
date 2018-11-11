@@ -60,6 +60,20 @@ class Global
 					std::shared_ptr<EngineUpdate> engineUpdate);
 		};
 
+		class JoystickEventHandler : public IEventHandler
+		{
+			private:
+				std::shared_ptr<Platform> _platform;
+				std::shared_ptr<IEventHandler> _subHandler;
+
+			public:
+				JoystickEventHandler(std::shared_ptr<Platform> platform,
+					std::shared_ptr<IEventHandler> subHandler);
+
+				void handleEvent(SDL_Event const & event,
+					std::shared_ptr<EngineUpdate> engineUpdate);
+		};
+
 		class WindowEventHandler : public IEventHandler
 		{
 			private:
