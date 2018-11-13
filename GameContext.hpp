@@ -19,7 +19,6 @@ class GameContext : public IGameContext
 
 	public:
 		GameContext(
-			std::shared_ptr<Platform> platform,
 			std::shared_ptr<IModel> model,
 			std::shared_ptr<IView> view,
 			std::shared_ptr<IEventHandler> eventHandler);

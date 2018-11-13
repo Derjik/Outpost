@@ -15,8 +15,10 @@ using namespace std;
 
 /*
  * TODO:
+ * o Split SDL_Renderer into dedicated class
+ * o Add viewports etc.
+ * o Implement zoom
  * o Add global and local millisecond-to-gametick ratio settings
- * o Add EngineUpdate to IModel::elapse() signature
  * o Improve text displaying API
  * o Rewrite Introspection API
  * o Modularize menus
@@ -24,7 +26,7 @@ using namespace std;
  *     TL T TR
  *     L  C  R
  *     BL B BR
- * o Implement zoom
+ * o Add Joystick API
  */
 
 int main(int argc, char ** argv)
@@ -56,7 +58,6 @@ int main(int argc, char ** argv)
 
 		std::shared_ptr<Menu::Model> menuModel(new Menu::Model);
 		std::shared_ptr<GameContext> menu(new GameContext(
-			platform,
 			menuModel,
 			std::shared_ptr<IView>(new Global::View(
 					platform,

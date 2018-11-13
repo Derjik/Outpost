@@ -94,32 +94,36 @@ Debug::View::View(std::shared_ptr<Platform> platform,
 	_model(model)
 {
 	Window * mainWindow(_platform->getWindowManager()->getWindowByName("mainWindow"));
+	Renderer * renderer(nullptr);
+	Texture * xboxController(nullptr);
+	if (mainWindow)
+		renderer = mainWindow->getRenderer();
 
-	if (!mainWindow->hasTexture(XBOX_CONTROLLER_TEXTURE_NAME))
+	if (renderer && !renderer->getTexture(XBOX_CONTROLLER_TEXTURE_NAME))
 	{
-		mainWindow->addImageTexture(
+		renderer->addImageTexture(
 			XBOX_CONTROLLER_TEXTURE_NAME,
 			XBOX_CONTROLLER_TEXTURE_PATH);
 
-		Texture & controller = mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
-		controller.addClip("A", { 878, 55, 78, 78 });
-		controller.addClip("B", { 1038, 55, 78, 78 });
-		controller.addClip("X", { 798, 55, 78, 78 });
-		controller.addClip("Y", { 958, 55, 78, 78 });
-		controller.addClip("BACK", { 491, 44, 81, 77 });
-		controller.addClip("START", { 712, 44, 84, 77 });
-		controller.addClip("GUIDE", { 574, 24, 136, 138 });
-		controller.addClip("DPAD", { 154, 1, 184, 186 });
+		Texture * controller = renderer->getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
+		controller->addClip("A", { 878, 55, 78, 78 });
+		controller->addClip("B", { 1038, 55, 78, 78 });
+		controller->addClip("X", { 798, 55, 78, 78 });
+		controller->addClip("Y", { 958, 55, 78, 78 });
+		controller->addClip("BACK", { 491, 44, 81, 77 });
+		controller->addClip("START", { 712, 44, 84, 77 });
+		controller->addClip("GUIDE", { 574, 24, 136, 138 });
+		controller->addClip("DPAD", { 154, 1, 184, 186 });
 	}
 }
 
 void Debug::View::display(void)
 {
 	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow->getRenderer());
+	Renderer * renderer = mainWindow->getRenderer();
 
-	SDL_SetRenderDrawColor(renderer, 0, 0, 32, 255);
-	SDL_RenderClear(renderer);
+	renderer->setDrawColor(0, 0, 32, 255);
+	renderer->fill();
 
 	Sint16 leftx(_model->getLeftJoystick().first),
 		lefty(_model->getLeftJoystick().second),
@@ -128,33 +132,33 @@ void Debug::View::display(void)
 		ltrigger(_model->getTriggers().first),
 		rtrigger(_model->getTriggers().second);
 
-	mainWindow->printText("DEBUG", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
+	renderer->printText("DEBUG", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
 
 	SDL_Rect lxr{ 200, 199, leftx, 3 };
 	SDL_Rect lyr{ 199, 200, 3, lefty };
-	SDL_SetRenderDrawColor(renderer, 0, 194, 255, 255);
-	SDL_RenderFillRect(renderer, &lxr);
-	SDL_RenderFillRect(renderer, &lyr);
-	SDL_RenderDrawLine(renderer, 195 + leftx, 200 + lefty, 205 + leftx, 200 + lefty);
-	SDL_RenderDrawLine(renderer, 200 + leftx, 195 + lefty, 200 + leftx, 205 + lefty);
+	renderer->setDrawColor(0, 194, 255, 255);
+	renderer->fillRect(lxr);
+	renderer->fillRect(lyr);
+	renderer->drawLine(195 + leftx, 200 + lefty, 205 + leftx, 200 + lefty);
+	renderer->drawLine(200 + leftx, 195 + lefty, 200 + leftx, 205 + lefty);
 
 	SDL_Rect rxr{ 600, 199, rightx, 3 };
 	SDL_Rect ryr{ 599, 200, 3, righty };
-	SDL_RenderFillRect(renderer, &rxr);
-	SDL_RenderFillRect(renderer, &ryr);
-	SDL_RenderDrawLine(renderer, 595 + rightx, 200 + righty, 605 + rightx, 200 + righty);
-	SDL_RenderDrawLine(renderer, 600 + rightx, 195 + righty, 600 + rightx, 205 + righty);
+	renderer->fillRect(rxr);
+	renderer->fillRect(ryr);
+	renderer->drawLine(595 + rightx, 200 + righty, 605 + rightx, 200 + righty);
+	renderer->drawLine(600 + rightx, 195 + righty, 600 + rightx, 205 + righty);
 
 	SDL_Rect leftr{ 200, 400, 3, ltrigger };
 	SDL_Rect rightr{ 600, 400, 3, rtrigger };
-	SDL_RenderFillRect(renderer, &leftr);
-	SDL_RenderFillRect(renderer, &rightr);
+	renderer->fillRect(leftr);
+	renderer->fillRect(rightr);
 
 	int
 		buttonsXOffset(500), buttonsYOffset(150),
 		dpadXOffset(250), dpadYOffset(150);
 
-	Texture & controller = mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
+	Texture * controller = renderer->getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
 	SDL_Rect
 		aDest{ buttonsXOffset + 300, buttonsYOffset + 200, 78, 78 },
 		bDest{ buttonsXOffset + 378, buttonsYOffset + 122, 78, 78 },
@@ -163,39 +167,29 @@ void Debug::View::display(void)
 
 	SDL_Rect dpadDest{ dpadXOffset, dpadYOffset, 184, 186 };
 
-	SDL_Rect upRect{ dpadXOffset + 49, dpadYOffset, 86, 66 };
+	//SDL_Rect upRect{ dpadXOffset + 49, dpadYOffset, 86, 66 };
 
-	if(_model->getButton("A"))
-		SDL_RenderCopy(renderer,
-			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
-			controller.getClip("A"), &aDest);
+	if (_model->getButton("A"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "A", aDest);
 
 	if (_model->getButton("B"))
-		SDL_RenderCopy(renderer,
-			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
-			controller.getClip("B"), &bDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "B", aDest);
 
 	if (_model->getButton("X"))
-		SDL_RenderCopy(renderer,
-			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
-			controller.getClip("X"), &xDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "X", aDest);
 
 	if (_model->getButton("Y"))
-		SDL_RenderCopy(renderer,
-			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
-			controller.getClip("Y"), &yDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "Y", aDest);
 
 	if (_model->getButton("UP") ||
 		_model->getButton("DOWN") ||
 		_model->getButton("LEFT") ||
 		_model->getButton("RIGHT"))
-		SDL_RenderCopy(renderer,
-			mainWindow->getTexture(XBOX_CONTROLLER_TEXTURE_NAME).getSDLTexture(),
-			controller.getClip("DPAD"), &dpadDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "DPAD", dpadDest);
 
-	SDL_SetRenderDrawColor(renderer, 200, 20, 20, 255);
-	if(_model->getButton("UP"))
-		SDL_RenderDrawRect(renderer, &upRect);
+	renderer->setDrawColor(200, 20, 20, 255);
+	if (_model->getButton("UP"))
+		renderer->drawRect({ dpadXOffset + 49, dpadYOffset, 86, 66 });
 }
 
 void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
@@ -252,7 +246,6 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 						event.cbutton.which);
 					update->pushGameContext(
 						std::shared_ptr<IGameContext>(new GameContext(
-						_platform,
 						nullptr,
 						std::shared_ptr<IView>(new Pause::View(
 							_platform,

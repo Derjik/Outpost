@@ -9,11 +9,9 @@
 #include <VBN/GameControllerManager.hpp>
 
 GameContext::GameContext(
-	std::shared_ptr<Platform> platform,
 	std::shared_ptr<IModel> model,
 	std::shared_ptr<IView> view,
 	std::shared_ptr<IEventHandler> eventHandler) :
-	_platform(platform),
 	_model(model),
 	_view(view),
 	_eventHandler(eventHandler)

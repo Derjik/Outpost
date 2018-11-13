@@ -14,15 +14,15 @@ Global::View::View(std::shared_ptr<Platform> platform,
 void Global::View::display(void)
 {
 	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow->getRenderer());
+	Renderer * renderer(mainWindow->getRenderer());
 
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
+	renderer->setDrawColor(0, 0, 0, 255);
+	renderer->clear();
 
 	if (_subView)
 		_subView->display();
 
-	SDL_RenderPresent(renderer);
+	renderer->present();
 }
 
 Global::EventHandler::EventHandler(

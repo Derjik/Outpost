@@ -70,7 +70,6 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> engineUpd
 
 			engineUpdate->pushGameContext(
 				std::shared_ptr<IGameContext>(new GameContext(
-					_platform,
 					model,
 					std::shared_ptr<IView>(new Global::View(
 							_platform,
@@ -110,15 +109,19 @@ Menu::View::View(std::shared_ptr<Model> model,
 void Menu::View::display(void)
 {
 	Window * mainWindow = _windowManager->getWindowByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow->getRenderer());
+	Renderer * renderer(mainWindow->getRenderer());
 
 	/* Clear draw area with blue */
-	SDL_SetRenderDrawColor(renderer, 0, 0, 32, 255);
-	SDL_RenderFillRect(renderer, nullptr);
+	renderer->setDrawColor(0, 0, 32, 255);
+	renderer->fill();
 
 	/* Print menu name */
-	mainWindow->printText("Menu", "courier",
-		20, {200, 200, 200, 255}, {0, 0, 200, 32});
+	renderer->printText(
+		"Menu",
+		"courier",
+		20,
+		{200, 200, 200, 255},
+		{0, 0, 200, 32});
 
 	SDL_Rect menuItems[3];
 	menuItems[0] = { 220, 100, 200, 32 };
@@ -128,15 +131,27 @@ void Menu::View::display(void)
 	SDL_Color menuColor{ 200, 200, 200, 255 };
 
 	/* Print menu items */
-	mainWindow->printText("Debug", "courier",
-		20, menuColor, menuItems[0]);
-	mainWindow->printText("Start", "courier",
-		20, menuColor, menuItems[1]);
-	mainWindow->printText("Exit", "courier",
-		20, menuColor, menuItems[2]);
+	mainWindow->getRenderer()->printText(
+		"Debug",
+		"courier",
+		20,
+		menuColor,
+		menuItems[0]);
+	mainWindow->getRenderer()->printText(
+		"Start",
+		"courier",
+		20,
+		menuColor,
+		menuItems[1]);
+	mainWindow->getRenderer()->printText(
+		"Exit",
+		"courier",
+		20,
+		menuColor,
+		menuItems[2]);
 
 	/* Highlight selection */
-	SDL_SetRenderDrawColor(renderer,
+	renderer->setDrawColor(
 		_model->getSelectionColor().r,
 		_model->getSelectionColor().g,
 		_model->getSelectionColor().b,
@@ -155,7 +170,7 @@ void Menu::View::display(void)
 			r = menuItems[2];
 		break;
 	}
-	SDL_RenderDrawRect(renderer, &r);
+	renderer->drawRect(r);
 }
 
 Menu::Model::Model(void) :

@@ -12,20 +12,18 @@ Pause::View::View(std::shared_ptr<Platform> platform,
 void Pause::View::display(void)
 {
 	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
-	SDL_Renderer * renderer(mainWindow->getRenderer());
+	Renderer * renderer(mainWindow->getRenderer());
 
 	_background->display();
 
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
-	SDL_RenderFillRect(renderer, nullptr);
+	renderer->setDrawColor(0, 0, 0, 100);
+	renderer->fill();
 
-	mainWindow->printText(
+	mainWindow->getRenderer()->printText(
 		"PAUSE",
 		"courier", 40,
 		{ 255, 255, 255, 255 },
 		{230, 220, 250, 50});
-
-	SDL_RenderPresent(renderer);
 }
 
 void Pause::GameControllerEventHandler::handleEvent(SDL_Event const & event,
