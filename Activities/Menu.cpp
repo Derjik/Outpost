@@ -3,6 +3,7 @@
 #include "Debug.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
+#include <VBN/Platform.hpp>
 
 Menu::KeyboardEventHandler::KeyboardEventHandler(
 	std::shared_ptr<Platform> platform,
@@ -101,15 +102,24 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> engineUpd
 }
 
 Menu::View::View(std::shared_ptr<Model> model,
-	std::shared_ptr<WindowManager> windowManager) :
+	std::shared_ptr<Platform> platform) :
 	_model(model),
-	_windowManager(windowManager)
+	_platform(platform)
 {}
 
 void Menu::View::display(void)
 {
-	Window * mainWindow = _windowManager->getWindowByName("mainWindow");
-	Renderer * renderer(mainWindow->getRenderer());
+	WindowManager * windowManager(nullptr);
+	Window * mainWindow(nullptr);
+	Renderer * renderer(nullptr);
+
+	windowManager = _platform->getWindowManager();
+	if (windowManager)
+		mainWindow = windowManager->getWindowByName("mainWindow");
+	if (mainWindow)
+		renderer = mainWindow->getRenderer();
+	if (!renderer)
+		return;
 
 	/* Clear draw area with blue */
 	renderer->setDrawColor(0, 0, 32, 255);

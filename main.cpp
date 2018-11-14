@@ -15,12 +15,8 @@ using namespace std;
 
 /*
  * TODO:
- * o Split SDL_Renderer into dedicated class
- * o Add viewports etc.
- * o Implement zoom
  * o Add global and local millisecond-to-gametick ratio settings
  * o Improve text displaying API
- * o Rewrite Introspection API
  * o Modularize menus
  * o Handle item placement
  *     TL T TR
@@ -35,14 +31,14 @@ int main(int argc, char ** argv)
 	IMG_Init(IMG_INIT_PNG);
 	TTF_Init();
 
-	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 
 	{
 		Introspection::perform();
 
 		std::shared_ptr<Platform> platform(new Platform(
-			std::shared_ptr<WindowManager>(new WindowManager),
-			std::shared_ptr<GameControllerManager>(new GameControllerManager)));
+			new WindowManager,
+			new GameControllerManager));
 
 		platform->getWindowManager()->add(
 			"mainWindow",
@@ -62,7 +58,7 @@ int main(int argc, char ** argv)
 			std::shared_ptr<IView>(new Global::View(
 					platform,
 					std::shared_ptr<IView>(new Menu::View(
-						menuModel, platform->getWindowManager())))),
+						menuModel, platform)))),
 			std::shared_ptr<IEventHandler>(new Global::EventHandler(
 					platform,
 					nullptr,

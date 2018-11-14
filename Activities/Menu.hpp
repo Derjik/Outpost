@@ -34,6 +34,18 @@ class Menu
 				void elapse(Uint32 const, std::shared_ptr<EngineUpdate>);
 		};
 
+		class View : public IView
+		{
+			private:
+				std::shared_ptr<Model> _model;
+				std::shared_ptr<Platform> _platform;
+
+			public:
+				View(std::shared_ptr<Model> data,
+					std::shared_ptr<Platform> platform);
+				void display(void);
+		};
+
 		class KeyboardEventHandler : public IEventHandler
 		{
 			private:
@@ -46,18 +58,6 @@ class Menu
 									std::shared_ptr<Model> model);
 				void handleEvent(SDL_Event const & event,
 					std::shared_ptr<EngineUpdate> engineUpdate);
-		};
-
-		class View : public IView
-		{
-			private:
-				std::shared_ptr<Model> _model;
-				std::shared_ptr<WindowManager> _windowManager;
-
-			public:
-				View(std::shared_ptr<Model> data,
-					std::shared_ptr<WindowManager> windowManager);
-				void display(void);
 		};
 };
 

@@ -17,16 +17,15 @@ Debug::Model::Model(std::shared_ptr<Platform> platform) : _platform(platform)
 void Debug::Model::elapse(Uint32 const gameTicks,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
-	std::shared_ptr<GameControllerManager> gameControllerManager =
-		_platform->getGameControllerManager();
-
+	GameControllerManager * gameControllerManager(nullptr);
 	GameController * gameController(nullptr);
 	SDL_GameController * sdlController(nullptr);
 
-	gameController = gameControllerManager->getControllerFromDeviceID(0);
+	gameControllerManager = _platform->getGameControllerManager();
+	if(gameControllerManager)
+		gameController = gameControllerManager->getControllerFromDeviceID(0);
 	if(gameController)
 		sdlController = gameController->getSDLGameController();
-
 	if (sdlController)
 	{
 		_leftJoystick.first =
@@ -163,23 +162,20 @@ void Debug::View::display(void)
 		aDest{ buttonsXOffset + 300, buttonsYOffset + 200, 78, 78 },
 		bDest{ buttonsXOffset + 378, buttonsYOffset + 122, 78, 78 },
 		xDest{ buttonsXOffset + 222, buttonsYOffset + 122, 78, 78 },
-		yDest{ buttonsXOffset + 300, buttonsYOffset + 44, 78, 78 };
-
-	SDL_Rect dpadDest{ dpadXOffset, dpadYOffset, 184, 186 };
-
-	//SDL_Rect upRect{ dpadXOffset + 49, dpadYOffset, 86, 66 };
+		yDest{ buttonsXOffset + 300, buttonsYOffset + 44, 78, 78 },
+		dpadDest{ dpadXOffset, dpadYOffset, 184, 186 };
 
 	if (_model->getButton("A"))
 		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "A", aDest);
 
 	if (_model->getButton("B"))
-		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "B", aDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "B", bDest);
 
 	if (_model->getButton("X"))
-		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "X", aDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "X", xDest);
 
 	if (_model->getButton("Y"))
-		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "Y", aDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "Y", yDest);
 
 	if (_model->getButton("UP") ||
 		_model->getButton("DOWN") ||
