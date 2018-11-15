@@ -27,12 +27,15 @@ using namespace std;
 
 int main(int argc, char ** argv)
 {
+	int returnCode(0);
+
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
 	TTF_Init();
 
 	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 
+	try
 	{
 		Introspection::perform();
 
@@ -50,7 +53,7 @@ int main(int argc, char ** argv)
 			SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE,
 			SDL_RENDERER_ACCELERATED,
 			std::shared_ptr<TrueTypeFontManager>(
-				new TrueTypeFontManager({ "courier", "arial" })));
+				new TrueTypeFontManager({ "noto", "courier", "arial" })));
 
 		std::shared_ptr<Menu::Model> menuModel(new Menu::Model);
 		std::shared_ptr<GameContext> menu(new GameContext(
@@ -72,10 +75,15 @@ int main(int argc, char ** argv)
 		std::shared_ptr<Engine> engine(new Engine(menu));
 		engine->run(0.01f);
 	}
+	catch (Exception const & exc)
+	{
+		EXCEPT(exc);
+		returnCode = -1;
+	}
 
 	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();
 
-	return 0;
+	return returnCode;
 }

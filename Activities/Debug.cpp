@@ -243,9 +243,9 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 					update->pushGameContext(
 						std::shared_ptr<IGameContext>(new GameContext(
 						nullptr,
-						std::shared_ptr<IView>(new Pause::View(
+						std::shared_ptr<IView>(new Global::View(
 							_platform,
-							std::shared_ptr<IView>(new Global::View(
+							std::shared_ptr<IView>(new Pause::View(
 								_platform,
 								std::shared_ptr<IView>(new View(
 									_platform, _model)))))),
