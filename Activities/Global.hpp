@@ -6,86 +6,85 @@
 
 class Platform;
 
-class Global
+namespace Global
 {
-	public:
-		class View : public IView
-		{
-			private:
-				std::shared_ptr<Platform> _platform;
-				std::shared_ptr<IView> _subView;
+	class View : public IView
+	{
+		private:
+			std::shared_ptr<Platform> _platform;
+			std::shared_ptr<IView> _subView;
 
-			public:
-				View(std::shared_ptr<Platform> platform,
-					std::shared_ptr<IView> subView);
-				void display(void);
-		};
+		public:
+			View(std::shared_ptr<Platform> platform,
+				std::shared_ptr<IView> subView);
+			void display(void);
+	};
 
-		class EventHandler : public EventDispatcher
-		{
-			public:
-				EventHandler(
-					std::shared_ptr<Platform> platform,
-					std::shared_ptr<IEventHandler> mouse,
-					std::shared_ptr<IEventHandler> keyboard,
-					std::shared_ptr<IEventHandler> gameController,
-					std::shared_ptr<IEventHandler> joystick,
-					std::shared_ptr<IEventHandler> window);
-		};
+	class EventHandler : public EventDispatcher
+	{
+		public:
+			EventHandler(
+				std::shared_ptr<Platform> platform,
+				std::shared_ptr<IEventHandler> mouse,
+				std::shared_ptr<IEventHandler> keyboard,
+				std::shared_ptr<IEventHandler> gameController,
+				std::shared_ptr<IEventHandler> joystick,
+				std::shared_ptr<IEventHandler> window);
+	};
 
-		class KeyboardEventHandler : public IEventHandler
-		{
-			private:
-				std::shared_ptr<Platform> _platform;
-				std::shared_ptr<IEventHandler> _subHandler;
+	class KeyboardEventHandler : public IEventHandler
+	{
+		private:
+			std::shared_ptr<Platform> _platform;
+			std::shared_ptr<IEventHandler> _subHandler;
 
-			public:
-				KeyboardEventHandler(std::shared_ptr<Platform> platform,
-					std::shared_ptr<IEventHandler> subHandler);
-				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<EngineUpdate> engineUpdate);
-		};
+		public:
+			KeyboardEventHandler(std::shared_ptr<Platform> platform,
+				std::shared_ptr<IEventHandler> subHandler);
+			void handleEvent(SDL_Event const & event,
+				std::shared_ptr<EngineUpdate> engineUpdate);
+	};
 
-		class GameControllerEventHandler : public IEventHandler
-		{
-			private:
-				std::shared_ptr<Platform> _platform;
-				std::shared_ptr<IEventHandler> _subHandler;
+	class GameControllerEventHandler : public IEventHandler
+	{
+		private:
+			std::shared_ptr<Platform> _platform;
+			std::shared_ptr<IEventHandler> _subHandler;
 
-			public:
-				GameControllerEventHandler(std::shared_ptr<Platform> platform,
-					std::shared_ptr<IEventHandler> subHandler);
+		public:
+			GameControllerEventHandler(std::shared_ptr<Platform> platform,
+				std::shared_ptr<IEventHandler> subHandler);
 
-				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<EngineUpdate> engineUpdate);
-		};
+			void handleEvent(SDL_Event const & event,
+				std::shared_ptr<EngineUpdate> engineUpdate);
+	};
 
-		class JoystickEventHandler : public IEventHandler
-		{
-			private:
-				std::shared_ptr<Platform> _platform;
-				std::shared_ptr<IEventHandler> _subHandler;
+	class JoystickEventHandler : public IEventHandler
+	{
+		private:
+			std::shared_ptr<Platform> _platform;
+			std::shared_ptr<IEventHandler> _subHandler;
 
-			public:
-				JoystickEventHandler(std::shared_ptr<Platform> platform,
-					std::shared_ptr<IEventHandler> subHandler);
+		public:
+			JoystickEventHandler(std::shared_ptr<Platform> platform,
+				std::shared_ptr<IEventHandler> subHandler);
 
-				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<EngineUpdate> engineUpdate);
-		};
+			void handleEvent(SDL_Event const & event,
+				std::shared_ptr<EngineUpdate> engineUpdate);
+	};
 
-		class WindowEventHandler : public IEventHandler
-		{
-			private:
-				std::shared_ptr<Platform> _platform;
-				std::shared_ptr<IEventHandler> _subHandler;
+	class WindowEventHandler : public IEventHandler
+	{
+		private:
+			std::shared_ptr<Platform> _platform;
+			std::shared_ptr<IEventHandler> _subHandler;
 
-			public:
-				WindowEventHandler(std::shared_ptr<Platform> platform,
-					std::shared_ptr<IEventHandler> subHandler);
-				void handleEvent(SDL_Event const & event,
-					std::shared_ptr<EngineUpdate> engineUpdate);
-		};
+		public:
+			WindowEventHandler(std::shared_ptr<Platform> platform,
+				std::shared_ptr<IEventHandler> subHandler);
+			void handleEvent(SDL_Event const & event,
+				std::shared_ptr<EngineUpdate> engineUpdate);
+	};
 };
 
 #endif // GLOBAL_HPP_INCLUDED

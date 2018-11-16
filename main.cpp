@@ -61,7 +61,7 @@ int main(int argc, char ** argv)
 			std::shared_ptr<IView>(new Global::View(
 					platform,
 					std::shared_ptr<IView>(new Menu::View(
-						menuModel, platform)))),
+						platform, menuModel)))),
 			std::shared_ptr<IEventHandler>(new Global::EventHandler(
 					platform,
 					nullptr,

@@ -101,8 +101,8 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> engineUpd
 	}
 }
 
-Menu::View::View(std::shared_ptr<Model> model,
-	std::shared_ptr<Platform> platform) :
+Menu::View::View(std::shared_ptr<Platform> platform,
+	std::shared_ptr<Model> model) :
 	_model(model),
 	_platform(platform)
 {}
