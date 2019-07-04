@@ -32,11 +32,17 @@ Global::EventHandler::EventHandler(
 	std::shared_ptr<IEventHandler> gameController,
 	std::shared_ptr<IEventHandler> joystick,
 	std::shared_ptr<IEventHandler> window) :
-	EventDispatcher(mouse,
-		std::shared_ptr<IEventHandler>(new Global::KeyboardEventHandler(platform, keyboard)),
-		std::shared_ptr<IEventHandler>(new Global::GameControllerEventHandler(platform, gameController)),
-		std::shared_ptr<IEventHandler>(new Global::JoystickEventHandler(platform, joystick)),
-		std::shared_ptr<IEventHandler>(new Global::WindowEventHandler(platform, window)))
+	EventDispatcher(
+		std::shared_ptr<IEventHandler>(
+			new Global::MouseEventHandler(platform, mouse)),
+		std::shared_ptr<IEventHandler>(
+			new Global::KeyboardEventHandler(platform, keyboard)),
+		std::shared_ptr<IEventHandler>(
+			new Global::GameControllerEventHandler(platform, gameController)),
+		std::shared_ptr<IEventHandler>(
+			new Global::JoystickEventHandler(platform, joystick)),
+		std::shared_ptr<IEventHandler>(
+			new Global::WindowEventHandler(platform, window)))
 {}
 
 Global::KeyboardEventHandler::KeyboardEventHandler(
@@ -61,6 +67,20 @@ void Global::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 	}
 
 	if(_subHandler)
+		_subHandler->handleEvent(event, engineUpdate);
+}
+
+Global::MouseEventHandler::MouseEventHandler(
+	std::shared_ptr<Platform> platform,
+	std::shared_ptr<IEventHandler> subHandler) :
+	_platform(platform),
+	_subHandler(subHandler)
+{}
+
+void Global::MouseEventHandler::handleEvent(SDL_Event const & event,
+	std::shared_ptr<EngineUpdate> engineUpdate)
+{
+	if (_subHandler)
 		_subHandler->handleEvent(event, engineUpdate);
 }
 

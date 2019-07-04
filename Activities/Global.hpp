@@ -32,6 +32,19 @@ namespace Global
 				std::shared_ptr<IEventHandler> window);
 	};
 
+	class MouseEventHandler : public IEventHandler
+	{
+		private:
+			std::shared_ptr<Platform> _platform;
+			std::shared_ptr<IEventHandler> _subHandler;
+
+		public:
+			MouseEventHandler(std::shared_ptr<Platform> platform,
+				std::shared_ptr<IEventHandler> subHandler);
+			void handleEvent(SDL_Event const & event,
+				std::shared_ptr<EngineUpdate> engineUpdate);
+	};
+
 	class KeyboardEventHandler : public IEventHandler
 	{
 		private:
