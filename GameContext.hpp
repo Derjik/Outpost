@@ -23,14 +23,17 @@ class GameContext : public IGameContext
 			std::shared_ptr<IView> view,
 			std::shared_ptr<IEventHandler> eventHandler);
 
-		void handleEvent(
-			SDL_Event const & event,
-			std::shared_ptr<EngineUpdate> engineUpdate);
+		/* View */
+		void display(void);
 
+		/* Model */
 		void elapse(Uint32 const gameTicks,
 			std::shared_ptr<EngineUpdate> engineUpdate);
 
-		void display(void);
+		/* Controller */
+		void handleEvent(
+			SDL_Event const & event,
+			std::shared_ptr<EngineUpdate> engineUpdate);
 };
 
 #endif // GAME_CONTEXT_HPP_INCLUDED

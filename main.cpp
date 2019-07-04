@@ -33,7 +33,7 @@ int main(int argc, char ** argv)
 	IMG_Init(IMG_INIT_PNG);
 	TTF_Init();
 
-	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
 
 	try
 	{
@@ -43,7 +43,7 @@ int main(int argc, char ** argv)
 			new WindowManager,
 			new GameControllerManager));
 
-		platform->getWindowManager()->add(
+		platform->getWindowManager()->addWindow(
 			"mainWindow",
 			"SDL Main Window",
 			SDL_WINDOWPOS_CENTERED,
@@ -54,6 +54,8 @@ int main(int argc, char ** argv)
 			SDL_RENDERER_ACCELERATED,
 			std::shared_ptr<TrueTypeFontManager>(
 				new TrueTypeFontManager({ "noto", "courier", "arial" })));
+
+		Introspection::log();
 
 		std::shared_ptr<Menu::Model> menuModel(new Menu::Model);
 		std::shared_ptr<GameContext> menu(new GameContext(
