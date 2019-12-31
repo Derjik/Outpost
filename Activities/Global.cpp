@@ -80,6 +80,21 @@ Global::MouseEventHandler::MouseEventHandler(
 void Global::MouseEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
+	switch (event.type)
+	{
+		case SDL_MOUSEMOTION:
+			VERBOSE(SDL_LOG_CATEGORY_INPUT, "Mouse motion (%d, %d)", event.motion.xrel, event.motion.yrel);
+		break;
+		case SDL_MOUSEBUTTONDOWN:
+			VERBOSE(SDL_LOG_CATEGORY_INPUT, "Mouse button %d down", event.button.button);
+		break;
+		case SDL_MOUSEBUTTONUP:
+			VERBOSE(SDL_LOG_CATEGORY_INPUT, "Mouse button %d up", event.button.button);
+		break;
+		case SDL_MOUSEWHEEL:
+			VERBOSE(SDL_LOG_CATEGORY_INPUT, "Mouse wheel (%d, %d)", event.wheel.x, event.wheel.y);
+		break;
+	}
 	if (_subHandler)
 		_subHandler->handleEvent(event, engineUpdate);
 }
