@@ -5,15 +5,136 @@
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/Platform.hpp>
 
-Menu::KeyboardEventHandler::KeyboardEventHandler(
+/* ------------------ MODEL ------------------ */
+
+Menu::Model::Model(void) :
+	_currentSelection(DEBUG),
+	_selectionColor{0, 0, 150, 255},
+	_ascend(true)
+{}
+
+Menu::Model::Item Menu::Model::getCurrentSelection(void)
+{
+	return _currentSelection;
+}
+
+void Menu::Model::setCurrentSelection(Menu::Model::Item selection)
+{
+	_currentSelection = selection;
+}
+
+void Menu::Model::elapse(Uint32 const gameTicks,
+	std::shared_ptr<EngineUpdate> engineUpdate)
+{
+	if (_ascend && _selectionColor.b < 200)
+	{
+		_selectionColor.b += 4;
+		if (_selectionColor.b >= 200)
+			_ascend = false;
+	}
+	else if (!_ascend && _selectionColor.b > 50)
+	{
+		_selectionColor.b -= 4;
+		if (_selectionColor.b <= 50)
+			_ascend = true;
+	}
+}
+
+SDL_Color Menu::Model::getSelectionColor(void)
+{
+	return _selectionColor;
+}
+
+/* ------------------ CONTROLLER ------------------ */
+
+Menu::MenuController::MenuController(
 	std::shared_ptr<Platform> platform,
-	std::shared_ptr<Menu::Model> model) :
+	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
 {}
 
-void Menu::KeyboardEventHandler::handleEvent(SDL_Event const & event,
-	std::shared_ptr<EngineUpdate> engineUpdate)
+void Menu::MenuController::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
+{
+	std::shared_ptr<Debug::Model> model(nullptr);
+
+	switch(_model->getCurrentSelection())
+	{
+		case Model::DEBUG:
+			model = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
+
+			engineUpdate->pushGameContext(
+				std::shared_ptr<IGameContext>(new GameContext(
+					model,
+					std::shared_ptr<IView>(new Global::View(
+							_platform,
+							std::shared_ptr<IView>(
+								new Debug::View(_platform, model)))),
+					std::shared_ptr<IEventHandler>(
+						new Global::EventHandler(
+							_platform,
+							nullptr,
+							std::shared_ptr<IEventHandler>(
+								new Debug::KeyboardEventHandler),
+							std::shared_ptr<IEventHandler>(
+								new Debug::GameControllerEventHandler(
+									_platform, model)),
+							nullptr,
+							nullptr))))
+				);
+		break;
+		case Model::START:
+			/*
+			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
+				new GCGame(_windowManager, _gameControllerManager)));
+			*/
+		break;
+		case Model::EXIT:
+			engineUpdate->popGameContext();
+		break;
+	}
+}
+
+void Menu::MenuController::switchDown(void)
+{
+	switch(_model->getCurrentSelection())
+	{
+		case Model::START:
+			_model->setCurrentSelection(Model::EXIT);
+		break;
+		case Model::EXIT:
+			_model->setCurrentSelection(Model::DEBUG);
+		break;
+		case Model::DEBUG:
+			_model->setCurrentSelection(Model::START);
+		break;
+	}
+}
+
+void Menu::MenuController::switchUp(void)
+{
+	switch(_model->getCurrentSelection())
+	{
+		case Model::START:
+			_model->setCurrentSelection(Model::DEBUG);
+		break;
+		case Model::EXIT:
+			_model->setCurrentSelection(Model::START);
+		break;
+		case Model::DEBUG:
+			_model->setCurrentSelection(Model::EXIT);
+		break;
+	}
+}
+
+void Menu::MenuController::quickExit(std::shared_ptr<EngineUpdate> engineUpdate)
+{
+	_model->setCurrentSelection(Model::EXIT);
+	performAction(engineUpdate);
+}
+
+void Menu::MenuController::handleEvent(SDL_Event const & event,
+							std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	switch(event.type)
 	{
@@ -21,178 +142,40 @@ void Menu::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 			switch(event.key.keysym.sym)
 			{
 				case SDLK_UP:
-					switch(_model->getCurrentSelection())
-					{
-						case Model::START:
-							_model->setCurrentSelection(Model::DEBUG);
-						break;
-						case Model::EXIT:
-							_model->setCurrentSelection(Model::START);
-						break;
-						case Model::DEBUG:
-							_model->setCurrentSelection(Model::EXIT);
-						break;
-					}
+					switchUp();
 				break;
 				case SDLK_DOWN:
-					switch(_model->getCurrentSelection())
-					{
-						case Model::START:
-							_model->setCurrentSelection(Model::EXIT);
-						break;
-						case Model::EXIT:
-							_model->setCurrentSelection(Model::DEBUG);
-						break;
-						case Model::DEBUG:
-							_model->setCurrentSelection(Model::START);
-						break;
-					}
+					switchDown();
 				break;
 				case SDLK_RETURN:
-					perform(engineUpdate);
+					performAction(engineUpdate);
 				break;
 				case SDLK_ESCAPE:
-					_model->setCurrentSelection(Model::EXIT);
-					perform(engineUpdate);
+					quickExit(engineUpdate);
 				break;
 			}
 		break;
-	}
-}
-
-void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> engineUpdate)
-{
-	std::shared_ptr<Debug::Model> model(nullptr);
-
-	switch(_model->getCurrentSelection())
-	{
-		case Model::DEBUG:
-			model = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
-
-			engineUpdate->pushGameContext(
-				std::shared_ptr<IGameContext>(new GameContext(
-					model,
-					std::shared_ptr<IView>(new Global::View(
-							_platform,
-							std::shared_ptr<IView>(
-								new Debug::View(_platform, model)))),
-					std::shared_ptr<IEventHandler>(
-						new Global::EventHandler(
-							_platform,
-							nullptr,
-							std::shared_ptr<IEventHandler>(
-								new Debug::KeyboardEventHandler),
-							std::shared_ptr<IEventHandler>(
-								new Debug::GameControllerEventHandler(
-									_platform, model)),
-							nullptr,
-							nullptr))))
-				);
-		break;
-		case Model::START:
-			/*
-			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
-				new GCGame(_windowManager, _gameControllerManager)));
-			*/
-		break;
-		case Model::EXIT:
-			engineUpdate->popGameContext();
-		break;
-	}
-}
-
-Menu::GameControllerEventHandler::GameControllerEventHandler(
-	std::shared_ptr<Platform> platform,
-	std::shared_ptr<Model> model) :
-	_platform(platform),
-	_model(model)
-{}
-
-void Menu::GameControllerEventHandler::handleEvent(
-	SDL_Event const & event,
-	std::shared_ptr<EngineUpdate> engineUpdate)
-{
-	switch (event.type)
-	{
 		case SDL_CONTROLLERBUTTONDOWN:
 			switch (event.cbutton.button)
 			{
 				case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-					switch(_model->getCurrentSelection())
-					{
-						case Model::START:
-							_model->setCurrentSelection(Model::EXIT);
-						break;
-						case Model::EXIT:
-							_model->setCurrentSelection(Model::DEBUG);
-						break;
-						case Model::DEBUG:
-							_model->setCurrentSelection(Model::START);
-						break;
-					}
+					switchDown();
 				break;
 				case SDL_CONTROLLER_BUTTON_DPAD_UP:
-					switch(_model->getCurrentSelection())
-					{
-						case Model::START:
-							_model->setCurrentSelection(Model::DEBUG);
-						break;
-						case Model::EXIT:
-							_model->setCurrentSelection(Model::START);
-						break;
-						case Model::DEBUG:
-							_model->setCurrentSelection(Model::EXIT);
-						break;
-					}
+					switchUp();
 				break;
 				case SDL_CONTROLLER_BUTTON_A:
-					perform(engineUpdate);
+					performAction(engineUpdate);
+				break;
+				case SDL_CONTROLLER_BUTTON_BACK:
+					quickExit(engineUpdate);
 				break;
 			}
 		break;
 	}
 }
 
-void Menu::GameControllerEventHandler::perform(std::shared_ptr<EngineUpdate> engineUpdate)
-{
-	std::shared_ptr<Debug::Model> model(nullptr);
-
-	switch(_model->getCurrentSelection())
-	{
-		case Model::DEBUG:
-			model = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
-
-			engineUpdate->pushGameContext(
-				std::shared_ptr<IGameContext>(new GameContext(
-					model,
-					std::shared_ptr<IView>(new Global::View(
-							_platform,
-							std::shared_ptr<IView>(
-								new Debug::View(_platform, model)))),
-					std::shared_ptr<IEventHandler>(
-						new Global::EventHandler(
-							_platform,
-							nullptr,
-							std::shared_ptr<IEventHandler>(
-								new Debug::KeyboardEventHandler),
-							std::shared_ptr<IEventHandler>(
-								new Debug::GameControllerEventHandler(
-									_platform, model)),
-							nullptr,
-							nullptr))))
-				);
-		break;
-		case Model::START:
-			/*
-			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
-				new GCGame(_windowManager, _gameControllerManager)));
-			*/
-		break;
-		case Model::EXIT:
-			engineUpdate->popGameContext();
-		break;
-	}
-}
+/* ------------------ VIEW ------------------ */
 
 Menu::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
@@ -274,42 +257,4 @@ void Menu::View::display(void)
 		break;
 	}
 	renderer->drawRect(r);
-}
-
-Menu::Model::Model(void) :
-	_currentSelection(DEBUG),
-	_selectionColor{0, 0, 150, 255},
-	_ascend(true)
-{}
-
-Menu::Model::Item Menu::Model::getCurrentSelection(void)
-{
-	return _currentSelection;
-}
-
-void Menu::Model::setCurrentSelection(Menu::Model::Item selection)
-{
-	_currentSelection = selection;
-}
-
-void Menu::Model::elapse(Uint32 const gameTicks,
-	std::shared_ptr<EngineUpdate> engineUpdate)
-{
-	if (_ascend && _selectionColor.b < 200)
-	{
-		_selectionColor.b += 4;
-		if (_selectionColor.b >= 200)
-			_ascend = false;
-	}
-	else if (!_ascend && _selectionColor.b > 50)
-	{
-		_selectionColor.b -= 4;
-		if (_selectionColor.b <= 50)
-			_ascend = true;
-	}
-}
-
-SDL_Color Menu::Model::getSelectionColor(void)
-{
-	return _selectionColor;
 }

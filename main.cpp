@@ -57,7 +57,10 @@ int main(int argc, char ** argv)
 
 		Introspection::log();
 
-		std::shared_ptr<Menu::Model> menuModel(new Menu::Model);
+		std::shared_ptr<Menu::Model> menuModel(
+			new Menu::Model);
+		std::shared_ptr<Menu::MenuController> menuController(
+			new Menu::MenuController(platform, menuModel));
 		std::shared_ptr<GameContext> menu(new GameContext(
 			menuModel,
 			std::shared_ptr<IView>(new Global::View(
@@ -67,10 +70,8 @@ int main(int argc, char ** argv)
 			std::shared_ptr<IEventHandler>(new Global::EventHandler(
 					platform,
 					nullptr,
-					std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(
-						platform, menuModel)),
-					std::shared_ptr<IEventHandler>(new Menu::GameControllerEventHandler(
-						platform, menuModel)),
+					std::shared_ptr<IEventHandler>(menuController),
+					std::shared_ptr<IEventHandler>(menuController),
 					nullptr,
 					nullptr))
 		));

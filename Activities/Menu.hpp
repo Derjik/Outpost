@@ -45,30 +45,20 @@ namespace Menu
 			void display(void);
 	};
 
-	class KeyboardEventHandler : public IEventHandler
+	class MenuController : public IEventHandler
 	{
 		private:
 			std::shared_ptr<Platform> _platform;
 			std::shared_ptr<Model> _model;
-			void perform(std::shared_ptr<EngineUpdate> engineUpdate);
+
+			void switchDown(void);
+			void switchUp(void);
+			void performAction(std::shared_ptr<EngineUpdate> engineUpdate);
+			void quickExit(std::shared_ptr<EngineUpdate> engineUpdate);
 
 		public:
-			KeyboardEventHandler(std::shared_ptr<Platform> platform,
-								std::shared_ptr<Model> model);
-			void handleEvent(SDL_Event const & event,
-				std::shared_ptr<EngineUpdate> engineUpdate);
-	};
-
-	class GameControllerEventHandler : public IEventHandler
-	{
-		private:
-			std::shared_ptr<Platform> _platform;
-			std::shared_ptr<Model> _model;
-			void perform(std::shared_ptr<EngineUpdate> engineUpdate);
-
-		public:
-			GameControllerEventHandler(std::shared_ptr<Platform> platform,
-									std::shared_ptr<Model> model);
+			MenuController(std::shared_ptr<Platform> platform,
+						std::shared_ptr<Model> model);
 			void handleEvent(SDL_Event const & event,
 				std::shared_ptr<EngineUpdate> engineUpdate);
 	};
