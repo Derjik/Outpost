@@ -69,7 +69,8 @@ int main(int argc, char ** argv)
 					nullptr,
 					std::shared_ptr<IEventHandler>(new Menu::KeyboardEventHandler(
 						platform, menuModel)),
-					nullptr,
+					std::shared_ptr<IEventHandler>(new Menu::GameControllerEventHandler(
+						platform, menuModel)),
 					nullptr,
 					nullptr))
 		));

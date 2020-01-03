@@ -58,6 +58,20 @@ namespace Menu
 			void handleEvent(SDL_Event const & event,
 				std::shared_ptr<EngineUpdate> engineUpdate);
 	};
+
+	class GameControllerEventHandler : public IEventHandler
+	{
+		private:
+			std::shared_ptr<Platform> _platform;
+			std::shared_ptr<Model> _model;
+			void perform(std::shared_ptr<EngineUpdate> engineUpdate);
+
+		public:
+			GameControllerEventHandler(std::shared_ptr<Platform> platform,
+									std::shared_ptr<Model> model);
+			void handleEvent(SDL_Event const & event,
+				std::shared_ptr<EngineUpdate> engineUpdate);
+	};
 };
 
 #endif // MENU_HPP_INCLUDED

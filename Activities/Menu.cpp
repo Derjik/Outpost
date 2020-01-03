@@ -101,6 +101,99 @@ void Menu::KeyboardEventHandler::perform(std::shared_ptr<EngineUpdate> engineUpd
 	}
 }
 
+Menu::GameControllerEventHandler::GameControllerEventHandler(
+	std::shared_ptr<Platform> platform,
+	std::shared_ptr<Model> model) :
+	_platform(platform),
+	_model(model)
+{}
+
+void Menu::GameControllerEventHandler::handleEvent(
+	SDL_Event const & event,
+	std::shared_ptr<EngineUpdate> engineUpdate)
+{
+	switch (event.type)
+	{
+		case SDL_CONTROLLERBUTTONDOWN:
+			switch (event.cbutton.button)
+			{
+				case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+					switch(_model->getCurrentSelection())
+					{
+						case Model::START:
+							_model->setCurrentSelection(Model::EXIT);
+						break;
+						case Model::EXIT:
+							_model->setCurrentSelection(Model::DEBUG);
+						break;
+						case Model::DEBUG:
+							_model->setCurrentSelection(Model::START);
+						break;
+					}
+				break;
+				case SDL_CONTROLLER_BUTTON_DPAD_UP:
+					switch(_model->getCurrentSelection())
+					{
+						case Model::START:
+							_model->setCurrentSelection(Model::DEBUG);
+						break;
+						case Model::EXIT:
+							_model->setCurrentSelection(Model::START);
+						break;
+						case Model::DEBUG:
+							_model->setCurrentSelection(Model::EXIT);
+						break;
+					}
+				break;
+				case SDL_CONTROLLER_BUTTON_A:
+					perform(engineUpdate);
+				break;
+			}
+		break;
+	}
+}
+
+void Menu::GameControllerEventHandler::perform(std::shared_ptr<EngineUpdate> engineUpdate)
+{
+	std::shared_ptr<Debug::Model> model(nullptr);
+
+	switch(_model->getCurrentSelection())
+	{
+		case Model::DEBUG:
+			model = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
+
+			engineUpdate->pushGameContext(
+				std::shared_ptr<IGameContext>(new GameContext(
+					model,
+					std::shared_ptr<IView>(new Global::View(
+							_platform,
+							std::shared_ptr<IView>(
+								new Debug::View(_platform, model)))),
+					std::shared_ptr<IEventHandler>(
+						new Global::EventHandler(
+							_platform,
+							nullptr,
+							std::shared_ptr<IEventHandler>(
+								new Debug::KeyboardEventHandler),
+							std::shared_ptr<IEventHandler>(
+								new Debug::GameControllerEventHandler(
+									_platform, model)),
+							nullptr,
+							nullptr))))
+				);
+		break;
+		case Model::START:
+			/*
+			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
+				new GCGame(_windowManager, _gameControllerManager)));
+			*/
+		break;
+		case Model::EXIT:
+			engineUpdate->popGameContext();
+		break;
+	}
+}
+
 Menu::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
 	_model(model),
