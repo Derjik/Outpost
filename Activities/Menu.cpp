@@ -4,23 +4,42 @@
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/Platform.hpp>
+#include <VBN/Logging.hpp>
 
 /* ------------------ MODEL ------------------ */
 
 Menu::Model::Model(void) :
-	_currentSelection(DEBUG),
+	_menuEntries{
+		Menu::Model::Item::ZONE_1,
+		Menu::Model::Item::ZONE_2,
+		Menu::Model::Item::ZONE_3,
+		Menu::Model::Item::DEBUG,
+		Menu::Model::Item::EXIT},
+	_currentSelection(0),
 	_selectionColor{0, 0, 150, 255},
 	_ascend(true)
 {}
 
 Menu::Model::Item Menu::Model::getCurrentSelection(void)
 {
-	return _currentSelection;
+	return _menuEntries.at(_currentSelection);
 }
 
-void Menu::Model::setCurrentSelection(Menu::Model::Item selection)
+void Menu::Model::setCurrentSelection(unsigned int const selection)
 {
 	_currentSelection = selection;
+}
+
+void Menu::Model::cycleUp(void)
+{
+	_currentSelection = (_currentSelection - 1);
+	if (_currentSelection >= NB_MENU_ENTRIES)
+		_currentSelection = NB_MENU_ENTRIES - 1;
+}
+
+void Menu::Model::cycleDown(void)
+{
+	_currentSelection = (_currentSelection + 1) % NB_MENU_ENTRIES;
 }
 
 void Menu::Model::elapse(Uint32 const gameTicks,
@@ -83,7 +102,19 @@ void Menu::MenuController::performAction(std::shared_ptr<EngineUpdate> engineUpd
 							nullptr))))
 				);
 		break;
-		case Model::START:
+		case Model::ZONE_1:
+			/*
+			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
+				new GCGame(_windowManager, _gameControllerManager)));
+			*/
+		break;
+		case Model::ZONE_2:
+			/*
+			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
+				new GCGame(_windowManager, _gameControllerManager)));
+			*/
+		break;
+		case Model::ZONE_3:
 			/*
 			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
 				new GCGame(_windowManager, _gameControllerManager)));
@@ -91,38 +122,6 @@ void Menu::MenuController::performAction(std::shared_ptr<EngineUpdate> engineUpd
 		break;
 		case Model::EXIT:
 			engineUpdate->popGameContext();
-		break;
-	}
-}
-
-void Menu::MenuController::switchDown(void)
-{
-	switch(_model->getCurrentSelection())
-	{
-		case Model::START:
-			_model->setCurrentSelection(Model::EXIT);
-		break;
-		case Model::EXIT:
-			_model->setCurrentSelection(Model::DEBUG);
-		break;
-		case Model::DEBUG:
-			_model->setCurrentSelection(Model::START);
-		break;
-	}
-}
-
-void Menu::MenuController::switchUp(void)
-{
-	switch(_model->getCurrentSelection())
-	{
-		case Model::START:
-			_model->setCurrentSelection(Model::DEBUG);
-		break;
-		case Model::EXIT:
-			_model->setCurrentSelection(Model::START);
-		break;
-		case Model::DEBUG:
-			_model->setCurrentSelection(Model::EXIT);
 		break;
 	}
 }
@@ -142,10 +141,10 @@ void Menu::MenuController::handleEvent(SDL_Event const & event,
 			switch(event.key.keysym.sym)
 			{
 				case SDLK_UP:
-					switchUp();
+					_model->cycleUp();
 				break;
 				case SDLK_DOWN:
-					switchDown();
+					_model->cycleDown();
 				break;
 				case SDLK_RETURN:
 					performAction(engineUpdate);
@@ -159,10 +158,10 @@ void Menu::MenuController::handleEvent(SDL_Event const & event,
 			switch (event.cbutton.button)
 			{
 				case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-					switchDown();
+					_model->cycleDown();
 				break;
 				case SDL_CONTROLLER_BUTTON_DPAD_UP:
-					switchUp();
+					_model->cycleUp();
 				break;
 				case SDL_CONTROLLER_BUTTON_A:
 					performAction(engineUpdate);
@@ -198,43 +197,64 @@ void Menu::View::display(void)
 		return;
 
 	/* Clear draw area with blue */
-	renderer->setDrawColor(0, 0, 32, 255);
+	renderer->setDrawColor(255, 255, 255, 255);
 	renderer->fill();
 
 	/* Print menu name */
 	renderer->printText(
-		"Menu",
+		"Main Menu",
 		"courier",
 		20,
-		{200, 200, 200, 255},
-		{0, 0, 200, 32});
+		{0, 0, 0, 255},
+		{0, 0, 200, 64});
 
-	SDL_Rect menuItems[3];
-	menuItems[0] = { 220, 100, 200, 32 };
-	menuItems[1] = { 220, 140, 200, 32 };
-	menuItems[2] = { 220, 180, 200, 32 };
+	SDL_Rect menuItems[NB_MENU_ENTRIES];
+	menuItems[0] = { 220, 100, 300, 32 };
+	menuItems[1] = { 220, 140, 300, 32 };
+	menuItems[2] = { 220, 180, 300, 32 };
+	menuItems[3] = { 220, 220, 300, 32 };
+	menuItems[4] = { 220, 260, 300, 32 };
 
-	SDL_Color menuColor{ 200, 200, 200, 255 };
+	SDL_Color menuColor{ 0, 0, 0, 255 };
+
+	mainWindow->getRenderer()->printText(
+		"Some complex multi-line text",
+		"courier",
+		20,
+		menuColor,
+		{40,100,150,150});
 
 	/* Print menu items */
 	mainWindow->getRenderer()->printText(
-		"Debug",
+		"ZONE_1",
 		"courier",
 		20,
 		menuColor,
 		menuItems[0]);
 	mainWindow->getRenderer()->printText(
-		"Start",
+		"ZONE 2",
 		"courier",
 		20,
 		menuColor,
 		menuItems[1]);
 	mainWindow->getRenderer()->printText(
-		"Exit",
+		"ZONE 3 3",
 		"courier",
 		20,
 		menuColor,
 		menuItems[2]);
+	mainWindow->getRenderer()->printText(
+		"ZONE A",
+		"courier",
+		20,
+		menuColor,
+		menuItems[3]);
+	mainWindow->getRenderer()->printText(
+		"EXIT",
+		"courier",
+		20,
+		menuColor,
+		menuItems[4]);
 
 	/* Highlight selection */
 	renderer->setDrawColor(
@@ -243,18 +263,6 @@ void Menu::View::display(void)
 		_model->getSelectionColor().b,
 		_model->getSelectionColor().a);
 
-	SDL_Rect r;
-	switch(_model->getCurrentSelection())
-	{
-		case Model::DEBUG:
-			r = menuItems[0];
-		break;
-		case Model::START:
-			r = menuItems[1];
-		break;
-		case Model::EXIT:
-			r = menuItems[2];
-		break;
-	}
+	SDL_Rect r(menuItems[_model->getCurrentSelection()]);
 	renderer->drawRect(r);
 }

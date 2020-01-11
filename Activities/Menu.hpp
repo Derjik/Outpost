@@ -5,6 +5,9 @@
 #include <VBN/IModel.hpp>
 #include <VBN/IView.hpp>
 #include <VBN/IEventHandler.hpp>
+#include <array>
+
+#define NB_MENU_ENTRIES 5
 
 class WindowManager;
 
@@ -15,20 +18,25 @@ namespace Menu
 		public:
 			enum Item
 			{
-				START,
+				ZONE_1,
+				ZONE_2,
+				ZONE_3,
 				DEBUG,
 				EXIT
 			};
 
 		private:
-			Item _currentSelection;
+			std::array<Menu::Model::Item, NB_MENU_ENTRIES> _menuEntries;
+			unsigned int _currentSelection;
 			SDL_Color _selectionColor;
 			bool _ascend;
 
 		public:
 			Model(void);
 			Item getCurrentSelection(void);
-			void setCurrentSelection(Item);
+			void setCurrentSelection(unsigned int const);
+			void cycleUp(void);
+			void cycleDown(void);
 			SDL_Color getSelectionColor(void);
 			void elapse(Uint32 const, std::shared_ptr<EngineUpdate>);
 	};
@@ -51,8 +59,6 @@ namespace Menu
 			std::shared_ptr<Platform> _platform;
 			std::shared_ptr<Model> _model;
 
-			void switchDown(void);
-			void switchUp(void);
 			void performAction(std::shared_ptr<EngineUpdate> engineUpdate);
 			void quickExit(std::shared_ptr<EngineUpdate> engineUpdate);
 
