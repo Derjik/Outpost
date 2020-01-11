@@ -4,7 +4,6 @@
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/Platform.hpp>
-#include <VBN/Logging.hpp>
 
 /* ------------------ MODEL ------------------ */
 
@@ -16,6 +15,8 @@ Menu::Model::Model(void) :
 		Menu::Model::Item::DEBUG,
 		Menu::Model::Item::EXIT},
 	_currentSelection(0),
+	_backgroundColor{0, 0, 0, 255},
+	_textColor{192, 192, 192, 255},
 	_selectionColor{0, 0, 150, 255},
 	_ascend(true)
 {}
@@ -57,6 +58,16 @@ void Menu::Model::elapse(Uint32 const gameTicks,
 		if (_selectionColor.b <= 50)
 			_ascend = true;
 	}
+}
+
+SDL_Color Menu::Model::getBackgroundColor(void)
+{
+	return _backgroundColor;
+}
+
+SDL_Color Menu::Model::getTextColor(void)
+{
+	return _textColor;
 }
 
 SDL_Color Menu::Model::getSelectionColor(void)
@@ -197,7 +208,7 @@ void Menu::View::display(void)
 		return;
 
 	/* Clear draw area with blue */
-	renderer->setDrawColor(255, 255, 255, 255);
+	renderer->setDrawColor(_model->getBackgroundColor());
 	renderer->fill();
 
 	/* Print menu name */
@@ -205,7 +216,7 @@ void Menu::View::display(void)
 		"Main Menu",
 		"courier",
 		20,
-		{0, 0, 0, 255},
+		_model->getTextColor(),
 		{0, 0, 200, 64});
 
 	SDL_Rect menuItems[NB_MENU_ENTRIES];
@@ -215,13 +226,11 @@ void Menu::View::display(void)
 	menuItems[3] = { 220, 220, 300, 32 };
 	menuItems[4] = { 220, 260, 300, 32 };
 
-	SDL_Color menuColor{ 0, 0, 0, 255 };
-
 	mainWindow->getRenderer()->printText(
 		"Some complex multi-line text",
 		"courier",
 		20,
-		menuColor,
+		_model->getTextColor(),
 		{40,100,150,150});
 
 	/* Print menu items */
@@ -229,31 +238,31 @@ void Menu::View::display(void)
 		"ZONE_1",
 		"courier",
 		20,
-		menuColor,
+		_model->getTextColor(),
 		menuItems[0]);
 	mainWindow->getRenderer()->printText(
 		"ZONE 2",
 		"courier",
 		20,
-		menuColor,
+		_model->getTextColor(),
 		menuItems[1]);
 	mainWindow->getRenderer()->printText(
 		"ZONE 3 3",
 		"courier",
 		20,
-		menuColor,
+		_model->getTextColor(),
 		menuItems[2]);
 	mainWindow->getRenderer()->printText(
 		"ZONE A",
 		"courier",
 		20,
-		menuColor,
+		_model->getTextColor(),
 		menuItems[3]);
 	mainWindow->getRenderer()->printText(
 		"EXIT",
 		"courier",
 		20,
-		menuColor,
+		_model->getTextColor(),
 		menuItems[4]);
 
 	/* Highlight selection */

@@ -28,6 +28,8 @@ namespace Menu
 		private:
 			std::array<Menu::Model::Item, NB_MENU_ENTRIES> _menuEntries;
 			unsigned int _currentSelection;
+			SDL_Color _backgroundColor;
+			SDL_Color _textColor;
 			SDL_Color _selectionColor;
 			bool _ascend;
 
@@ -37,6 +39,8 @@ namespace Menu
 			void setCurrentSelection(unsigned int const);
 			void cycleUp(void);
 			void cycleDown(void);
+			SDL_Color getBackgroundColor(void);
+			SDL_Color getTextColor(void);
 			SDL_Color getSelectionColor(void);
 			void elapse(Uint32 const, std::shared_ptr<EngineUpdate>);
 	};
