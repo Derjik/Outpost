@@ -82,9 +82,9 @@ void Global::MouseEventHandler::handleEvent(SDL_Event const & event,
 {
 	switch (event.type)
 	{
-		case SDL_MOUSEMOTION:
-			VERBOSE(SDL_LOG_CATEGORY_INPUT, "Mouse motion (%d, %d)", event.motion.xrel, event.motion.yrel);
-		break;
+//		case SDL_MOUSEMOTION:
+//			VERBOSE(SDL_LOG_CATEGORY_INPUT, "Mouse motion (%d, %d)", event.motion.xrel, event.motion.yrel);
+//		break;
 		case SDL_MOUSEBUTTONDOWN:
 			VERBOSE(SDL_LOG_CATEGORY_INPUT, "Mouse button %d down", event.button.button);
 		break;

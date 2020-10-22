@@ -29,12 +29,11 @@ using namespace std;
 int main(int argc, char ** argv)
 {
 	int returnCode(0);
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
 	TTF_Init();
-
-	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 	Mix_Init(MIX_INIT_FLAC
 			|MIX_INIT_MID
 			|MIX_INIT_MOD
