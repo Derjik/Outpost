@@ -4,6 +4,7 @@
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/Platform.hpp>
+#include <VBN/Mixer.hpp>
 
 /* ------------------ MODEL ------------------ */
 
@@ -153,15 +154,20 @@ void Menu::MenuController::handleEvent(SDL_Event const & event,
 			{
 				case SDLK_UP:
 					_model->cycleUp();
+					_platform->getMixer()->playEffect("drum");
 				break;
 				case SDLK_DOWN:
 					_model->cycleDown();
+					_platform->getMixer()->playEffect("drum");
 				break;
 				case SDLK_RETURN:
 					performAction(engineUpdate);
 				break;
 				case SDLK_ESCAPE:
 					quickExit(engineUpdate);
+				break;
+				case SDLK_m:
+					_platform->getMixer()->playMusic("ftl");
 				break;
 			}
 		break;
@@ -170,9 +176,11 @@ void Menu::MenuController::handleEvent(SDL_Event const & event,
 			{
 				case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
 					_model->cycleDown();
+					_platform->getMixer()->playEffect("drum");
 				break;
 				case SDL_CONTROLLER_BUTTON_DPAD_UP:
 					_model->cycleUp();
+					_platform->getMixer()->playEffect("drum");
 				break;
 				case SDL_CONTROLLER_BUTTON_A:
 					performAction(engineUpdate);

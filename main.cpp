@@ -10,6 +10,7 @@
 #include "Activities/Menu.hpp"
 #include "Activities/Global.hpp"
 #include <VBN/Platform.hpp>
+#include <VBN/Mixer.hpp>
 
 using namespace std;
 
@@ -34,6 +35,12 @@ int main(int argc, char ** argv)
 	TTF_Init();
 
 	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
+	Mix_Init(MIX_INIT_FLAC
+			|MIX_INIT_MID
+			|MIX_INIT_MOD
+			|MIX_INIT_MP3
+			|MIX_INIT_OGG
+			|MIX_INIT_OPUS);
 
 	try
 	{
@@ -41,7 +48,11 @@ int main(int argc, char ** argv)
 
 		std::shared_ptr<Platform> platform(new Platform(
 			new WindowManager,
-			new GameControllerManager));
+			new GameControllerManager,
+			new Mixer(0)));
+
+		platform->getMixer()->loadEffect("sample.wav", "drum");
+		platform->getMixer()->loadMusic("music.flac", "ftl");
 
 		platform->getWindowManager()->addWindow(
 			"mainWindow",
@@ -85,6 +96,7 @@ int main(int argc, char ** argv)
 		returnCode = -1;
 	}
 
+	Mix_Quit();
 	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();
