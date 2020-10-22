@@ -1,6 +1,8 @@
 # Resources
 *.ttf
 *.png
+*.wav
+*.flac
 
 # Object modules
 *.o
