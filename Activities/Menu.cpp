@@ -10,9 +10,9 @@
 
 Menu::Model::Model(void) :
 	_menuEntries{
-		Menu::Model::Item::ZONE_1,
-		Menu::Model::Item::ZONE_2,
-		Menu::Model::Item::ZONE_3,
+		Menu::Model::Item::APP_1,
+		Menu::Model::Item::APP_2,
+		Menu::Model::Item::APP_3,
 		Menu::Model::Item::DEBUG,
 		Menu::Model::Item::EXIT},
 	_currentSelection(0),
@@ -42,6 +42,11 @@ void Menu::Model::cycleUp(void)
 void Menu::Model::cycleDown(void)
 {
 	_currentSelection = (_currentSelection + 1) % NB_MENU_ENTRIES;
+}
+
+void Menu::Model::cycleTo(Item const app)
+{
+	_currentSelection = app;
 }
 
 void Menu::Model::elapse(Uint32 const gameTicks,
@@ -114,19 +119,19 @@ void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 							nullptr))))
 				);
 		break;
-		case Model::ZONE_1:
+		case Model::APP_1:
 			/*
 			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
 				new GCGame(_windowManager, _gameControllerManager)));
 			*/
 		break;
-		case Model::ZONE_2:
+		case Model::APP_2:
 			/*
 			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
 				new GCGame(_windowManager, _gameControllerManager)));
 			*/
 		break;
-		case Model::ZONE_3:
+		case Model::APP_3:
 			/*
 			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
 				new GCGame(_windowManager, _gameControllerManager)));
@@ -160,12 +165,31 @@ void Menu::Controller::handleEvent(SDL_Event const & event,
 					_model->cycleDown();
 					_platform->getMixer()->playEffect("drum");
 				break;
+
 				case SDLK_RETURN:
 					performAction(engineUpdate);
 				break;
+
 				case SDLK_ESCAPE:
 					quickExit(engineUpdate);
 				break;
+
+				case SDLK_a:
+					_model->cycleTo(Model::APP_1);
+				break;
+
+				case SDLK_b:
+					_model->cycleTo(Model::APP_2);
+				break;
+
+				case SDLK_c:
+					_model->cycleTo(Model::APP_3);
+				break;
+
+				case SDLK_d:
+					_model->cycleTo(Model::DEBUG);
+				break;
+
 				case SDLK_m:
 					_platform->getMixer()->playMusic("ftl");
 				break;
@@ -228,11 +252,11 @@ void Menu::View::display(void)
 		{0, 0, 200, 64});
 
 	SDL_Rect menuItems[NB_MENU_ENTRIES];
-	menuItems[0] = { 220, 100, 300, 32 };
-	menuItems[1] = { 220, 140, 300, 32 };
-	menuItems[2] = { 220, 180, 300, 32 };
-	menuItems[3] = { 220, 220, 300, 32 };
-	menuItems[4] = { 220, 260, 300, 32 };
+	menuItems[0] = { 220, 100, 600, 32 };
+	menuItems[1] = { 220, 140, 600, 32 };
+	menuItems[2] = { 220, 180, 600, 32 };
+	menuItems[3] = { 220, 220, 600, 32 };
+	menuItems[4] = { 220, 260, 600, 32 };
 
 	mainWindow->getRenderer()->printText(
 		"Some complex multi-line text",
@@ -243,31 +267,31 @@ void Menu::View::display(void)
 
 	/* Print menu items */
 	mainWindow->getRenderer()->printText(
-		"ZONE_1",
+		"A - App 1",
 		"courier",
 		20,
 		_model->getTextColor(),
 		menuItems[0]);
 	mainWindow->getRenderer()->printText(
-		"ZONE 2",
+		"B - App 2",
 		"courier",
 		20,
 		_model->getTextColor(),
 		menuItems[1]);
 	mainWindow->getRenderer()->printText(
-		"ZONE 3 3",
+		"C - App 3",
 		"courier",
 		20,
 		_model->getTextColor(),
 		menuItems[2]);
 	mainWindow->getRenderer()->printText(
-		"ZONE A",
+		"D - Debug",
 		"courier",
 		20,
 		_model->getTextColor(),
 		menuItems[3]);
 	mainWindow->getRenderer()->printText(
-		"EXIT",
+		"Esc - Exit",
 		"courier",
 		20,
 		_model->getTextColor(),

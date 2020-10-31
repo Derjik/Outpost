@@ -18,9 +18,9 @@ namespace Menu
 		public:
 			enum Item
 			{
-				ZONE_1,
-				ZONE_2,
-				ZONE_3,
+				APP_1,
+				APP_2,
+				APP_3,
 				DEBUG,
 				EXIT
 			};
@@ -39,6 +39,7 @@ namespace Menu
 			void setCurrentSelection(unsigned int const);
 			void cycleUp(void);
 			void cycleDown(void);
+			void cycleTo(Item const app);
 			SDL_Color getBackgroundColor(void);
 			SDL_Color getTextColor(void);
 			SDL_Color getSelectionColor(void);
