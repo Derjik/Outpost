@@ -78,14 +78,14 @@ SDL_Color Menu::Model::getSelectionColor(void)
 
 /* ------------------ CONTROLLER ------------------ */
 
-Menu::MenuController::MenuController(
+Menu::Controller::Controller(
 	std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
 {}
 
-void Menu::MenuController::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
+void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	std::shared_ptr<Debug::Model> model(nullptr);
 
@@ -138,13 +138,13 @@ void Menu::MenuController::performAction(std::shared_ptr<EngineUpdate> engineUpd
 	}
 }
 
-void Menu::MenuController::quickExit(std::shared_ptr<EngineUpdate> engineUpdate)
+void Menu::Controller::quickExit(std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	_model->setCurrentSelection(Model::EXIT);
 	performAction(engineUpdate);
 }
 
-void Menu::MenuController::handleEvent(SDL_Event const & event,
+void Menu::Controller::handleEvent(SDL_Event const & event,
 							std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	switch(event.type)

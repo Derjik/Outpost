@@ -57,7 +57,7 @@ namespace Menu
 			void display(void);
 	};
 
-	class MenuController : public IEventHandler
+	class Controller : public IEventHandler
 	{
 		private:
 			std::shared_ptr<Platform> _platform;
@@ -67,7 +67,7 @@ namespace Menu
 			void quickExit(std::shared_ptr<EngineUpdate> engineUpdate);
 
 		public:
-			MenuController(std::shared_ptr<Platform> platform,
+			Controller(std::shared_ptr<Platform> platform,
 						std::shared_ptr<Model> model);
 			void handleEvent(SDL_Event const & event,
 				std::shared_ptr<EngineUpdate> engineUpdate);
