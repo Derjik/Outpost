@@ -27,6 +27,7 @@ namespace Debug
 			std::pair<Sint16, Sint16> getRightJoystick(void);
 			std::pair<Sint16, Sint16> getTriggers(void);
 			bool getButton(std::string const & button);
+			std::map<std::string, bool> const & getButtons(void) const;
 	};
 
 	class KeyboardEventHandler : public IEventHandler

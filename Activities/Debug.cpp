@@ -7,9 +7,14 @@
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
 #include <VBN/Logging.hpp>
+#include <sstream>
 
 #define XBOX_CONTROLLER_TEXTURE_PATH "xbox_controller.png"
 #define XBOX_CONTROLLER_TEXTURE_NAME "XBox360Controller"
+
+/* ----------------------------------------------- */
+/* -------------------- MODEL -------------------- */
+/* ----------------------------------------------- */
 
 Debug::Model::Model(std::shared_ptr<Platform> platform) : _platform(platform)
 {}
@@ -58,8 +63,8 @@ void Debug::Model::elapse(Uint32 const gameTicks,
 
 		_buttons["LSTICK"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_LEFTSTICK);
 		_buttons["RSTICK"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
-		_buttons["LSHOULDER"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_LEFTSTICK);
-		_buttons["RSHOULDER"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_RIGHTSTICK);
+		_buttons["LSHOULDER"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
+		_buttons["RSHOULDER"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
 
 		_buttons["START"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_START);
 		_buttons["BACK"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_BACK);
@@ -86,6 +91,15 @@ bool Debug::Model::getButton(std::string const & button)
 {
 	return _buttons[button];
 }
+
+std::map<std::string, bool> const & Debug::Model::getButtons(void) const
+{
+	return _buttons;
+}
+
+/* ---------------------------------------------- */
+/* -------------------- VIEW -------------------- */
+/* ---------------------------------------------- */
 
 Debug::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
@@ -124,6 +138,11 @@ void Debug::View::display(void)
 	renderer->setDrawColor(0, 0, 32, 255);
 	renderer->fill();
 
+	renderer->printText("DEBUG", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
+
+
+
+	// Acquire Joysticks & Triggers data
 	Sint16 leftx(_model->getLeftJoystick().first),
 		lefty(_model->getLeftJoystick().second),
 		rightx(_model->getRightJoystick().first),
@@ -131,16 +150,50 @@ void Debug::View::display(void)
 		ltrigger(_model->getTriggers().first),
 		rtrigger(_model->getTriggers().second);
 
-	renderer->printText("DEBUG", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
+	std::stringstream lJoyStatus, rJoyStatus, tStatus;
+	lJoyStatus << "Left Joystick : " << leftx << "," << lefty;
+	rJoyStatus << "Right Joystick : " << rightx << "," << righty;
+	tStatus << "Triggers Status : " << ltrigger << "," << rtrigger;
 
+	int printHeight(22);
+	// Print joysticks & triggers status
+	renderer->printText(lJoyStatus.str(),
+		"courier", 16, { 255, 255, 255, 255 }, { 900, printHeight, 400, 22 });
+	printHeight += 22;
+	renderer->printText(rJoyStatus.str(),
+		"courier", 16, { 255, 255, 255, 255 }, { 900, printHeight, 400, 22 });
+	printHeight += 22;
+	renderer->printText(tStatus.str(),
+		"courier", 16, { 255, 255, 255, 255 }, { 900, printHeight, 400, 22 });
+	printHeight += 22;
+
+	// Print status for each button
+	for (auto const & pair : _model->getButtons())
+	{
+		std::stringstream bStatus;
+		bStatus << pair.first << " : ";
+		if (pair.second)
+			bStatus << "pressed";
+		else
+			bStatus << "released";
+
+		renderer->printText(bStatus.str(),
+			"courier", 16,
+			{ 255, 255, 255, 255 },
+			{ 900, printHeight, 400, 22});
+		printHeight += 22;
+	}
+
+	// Draw left & right joystick crosshairs
+	renderer->setDrawColor(0, 194, 255, 255);
+	// LEFT
 	SDL_Rect lxr{ 200, 199, leftx, 3 };
 	SDL_Rect lyr{ 199, 200, 3, lefty };
-	renderer->setDrawColor(0, 194, 255, 255);
 	renderer->fillRect(lxr);
 	renderer->fillRect(lyr);
 	renderer->drawLine(195 + leftx, 200 + lefty, 205 + leftx, 200 + lefty);
 	renderer->drawLine(200 + leftx, 195 + lefty, 200 + leftx, 205 + lefty);
-
+	// RIGHT
 	SDL_Rect rxr{ 600, 199, rightx, 3 };
 	SDL_Rect ryr{ 599, 200, 3, righty };
 	renderer->fillRect(rxr);
@@ -148,6 +201,7 @@ void Debug::View::display(void)
 	renderer->drawLine(595 + rightx, 200 + righty, 605 + rightx, 200 + righty);
 	renderer->drawLine(600 + rightx, 195 + righty, 600 + rightx, 205 + righty);
 
+	// Draw left & right trigger levels
 	SDL_Rect leftr{ 200, 400, 3, ltrigger };
 	SDL_Rect rightr{ 600, 400, 3, rtrigger };
 	renderer->fillRect(leftr);
@@ -187,6 +241,10 @@ void Debug::View::display(void)
 	if (_model->getButton("UP"))
 		renderer->drawRect({ dpadXOffset + 49, dpadYOffset, 86, 66 });
 }
+
+/* ---------------------------------------------------- */
+/* -------------------- CONTROLLER -------------------- */
+/* ---------------------------------------------------- */
 
 void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
