@@ -95,7 +95,7 @@ int main(int argc, char ** argv)
 		));
 
 		std::shared_ptr<Engine> engine(new Engine(menu));
-		engine->run(0.01f);
+		engine->run(1.f);
 	}
 	catch (Exception const & exc)
 	{
