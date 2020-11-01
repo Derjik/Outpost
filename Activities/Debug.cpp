@@ -150,39 +150,19 @@ void Debug::View::display(void)
 		ltrigger(_model->getTriggers().first),
 		rtrigger(_model->getTriggers().second);
 
-	std::stringstream lJoyStatus, rJoyStatus, tStatus;
-	lJoyStatus << "Left Joystick : " << leftx << "," << lefty;
-	rJoyStatus << "Right Joystick : " << rightx << "," << righty;
-	tStatus << "Triggers Status : " << ltrigger << "," << rtrigger;
+	std::stringstream controllerStatus;
+	controllerStatus
+		<< "Left Joystick : " << leftx << "," << lefty << '\n'
+		<< "Right Joystick : " << rightx << "," << righty << '\n'
+		<< "Triggers Status : " << ltrigger << "," << rtrigger << '\n'
+		<< "A : " << _model->getButton("A") << "\n\r"
+		<< "B : " << _model->getButton("B") << "\n\r"
+		<< "X : " << _model->getButton("X") << "\n\r"
+		<< "Y : " << _model->getButton("Y") << "\n\r";
 
-	int printHeight(22);
-	// Print joysticks & triggers status
-	renderer->printText(lJoyStatus.str(),
-		"courier", 16, { 255, 255, 255, 255 }, { 900, printHeight, 400, 22 });
-	printHeight += 22;
-	renderer->printText(rJoyStatus.str(),
-		"courier", 16, { 255, 255, 255, 255 }, { 900, printHeight, 400, 22 });
-	printHeight += 22;
-	renderer->printText(tStatus.str(),
-		"courier", 16, { 255, 255, 255, 255 }, { 900, printHeight, 400, 22 });
-	printHeight += 22;
-
-	// Print status for each button
-	for (auto const & pair : _model->getButtons())
-	{
-		std::stringstream bStatus;
-		bStatus << pair.first << " : ";
-		if (pair.second)
-			bStatus << "pressed";
-		else
-			bStatus << "released";
-
-		renderer->printText(bStatus.str(),
-			"courier", 16,
-			{ 255, 255, 255, 255 },
-			{ 900, printHeight, 400, 22});
-		printHeight += 22;
-	}
+	renderer->printText(controllerStatus.str(),
+		"courier", 16, { 255, 255, 255, 255 },
+		{ 920, 20, 400, 300 });
 
 	// Draw left & right joystick crosshairs
 	renderer->setDrawColor(0, 194, 255, 255);

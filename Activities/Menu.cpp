@@ -1,5 +1,6 @@
 #include "Menu.hpp"
 #include "Global.hpp"
+#include "Text.hpp"
 #include "Debug.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
@@ -92,20 +93,21 @@ Menu::Controller::Controller(
 
 void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 {
-	std::shared_ptr<Debug::Model> model(nullptr);
+	std::shared_ptr<Debug::Model> debugModel(nullptr);
+	std::shared_ptr<Text::Model> textModel(nullptr);
 
 	switch(_model->getCurrentSelection())
 	{
 		case Model::DEBUG:
-			model = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
+			debugModel = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
 
 			engineUpdate->pushGameContext(
 				std::shared_ptr<IGameContext>(new GameContext(
-					model,
+					debugModel,
 					std::shared_ptr<IView>(new Global::View(
 							_platform,
 							std::shared_ptr<IView>(
-								new Debug::View(_platform, model)))),
+								new Debug::View(_platform, debugModel)))),
 					std::shared_ptr<IEventHandler>(
 						new Global::EventHandler(
 							_platform,
@@ -114,16 +116,32 @@ void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 								new Debug::KeyboardEventHandler),
 							std::shared_ptr<IEventHandler>(
 								new Debug::GameControllerEventHandler(
-									_platform, model)),
+									_platform, debugModel)),
 							nullptr,
 							nullptr))))
 				);
 		break;
 		case Model::APP_1:
-			/*
+			textModel = std::shared_ptr<Text::Model>(new Text::Model(_platform));
 			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
-				new GCGame(_windowManager, _gameControllerManager)));
-			*/
+				new GameContext(
+					textModel,
+					std::shared_ptr<IView>(new Global::View(
+						_platform,
+						std::shared_ptr<IView>(new Text::View(
+							_platform, textModel)))),
+					std::shared_ptr<IEventHandler>(
+						new Global::EventHandler(
+							_platform,
+							nullptr,
+							std::shared_ptr<IEventHandler>(
+								new Text::KeyboardEventHandler),
+							std::shared_ptr<IEventHandler>(
+								new Text::GameControllerEventHandler(textModel)),
+							nullptr,
+							nullptr)))
+				)
+			);
 		break;
 		case Model::APP_2:
 			/*
