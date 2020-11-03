@@ -155,10 +155,10 @@ void Debug::View::display(void)
 		<< "Left Joystick : " << leftx << "," << lefty << '\n'
 		<< "Right Joystick : " << rightx << "," << righty << '\n'
 		<< "Triggers Status : " << ltrigger << "," << rtrigger << '\n'
-		<< "A : " << _model->getButton("A") << "\n\r"
-		<< "B : " << _model->getButton("B") << "\n\r"
-		<< "X : " << _model->getButton("X") << "\n\r"
-		<< "Y : " << _model->getButton("Y") << "\n\r";
+		<< "A : " << _model->getButton("A") << "\n"
+		<< "B : " << _model->getButton("B") << "\n"
+		<< "X : " << _model->getButton("X") << "\n"
+		<< "Y : " << _model->getButton("Y");
 
 	renderer->printText(controllerStatus.str(),
 		"courier", 16, { 255, 255, 255, 255 },
