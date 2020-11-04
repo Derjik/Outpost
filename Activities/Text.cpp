@@ -216,24 +216,33 @@ Text::View::View(std::shared_ptr<Platform> platform,
 
 void Text::View::display(void)
 {
+	// Acquire Window & Renderer for later use
 	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
 	Renderer * renderer = mainWindow->getRenderer();
 
+	// Clear screen
 	renderer->setDrawColor(0, 0, 32, 255);
 	renderer->fill();
 
-	renderer->printText("TEXT", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
+	// Print current app name
+	//renderer->printText("TEXT", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
 
-	SDL_Color c;
+	// Print debug text in dynamically-adjusted Drawing Space
 	renderer->printText("Lorem ipsum dolor sit amet, consectetur adipiscing "
 		"elit, sed do eiusmod tempor incididunt ut labore et dolore magna "
 		"aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco "
 		"laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure "
 		"dolor in reprehenderit in voluptate velit esse cillum dolore eu "
-		"fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident, "
+		"fugiat nulla pariatur.\n"
+		"Excepteur sint occaecat cupidatat non proident, "
 		"sunt in culpa qui officia deserunt mollit anim id est laborum.\n",
 		"courier", _model->getFontSize(), { 255, 255, 255, 255 },
 		_model->getDrawSpace());
+	/*
+	renderer->printText("ABCDEF\n",
+		"courier", _model->getFontSize(), { 255, 255, 255, 255 },
+		_model->getDrawSpace());
+	*/
 }
 
 /* ---------------------------------------------------- */

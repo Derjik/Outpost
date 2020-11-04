@@ -22,6 +22,8 @@ void Global::View::display(void)
 	if (_subView)
 		_subView->display();
 
+	renderer->printText(getLogAggregate(), "courier", 12, { 255, 255, 255, 255 }, { 600, 200, 600, 600 });
+
 	renderer->present();
 }
 
