@@ -1,6 +1,7 @@
 #ifndef GLOBAL_HPP_INCLUDED
 #define GLOBAL_HPP_INCLUDED
 
+#include <VBN/IModel.hpp>
 #include <VBN/IView.hpp>
 #include <VBN/EventDispatcher.hpp>
 
@@ -8,10 +9,27 @@ class Platform;
 
 namespace Global
 {
+	class Model : public IModel
+	{
+		private:
+			bool _showLogs;
+			Model(void);
+
+		public:
+			static std::shared_ptr<Model> getInstance(void);
+			void elapse(Uint32 const gameTicks,
+				std::shared_ptr<EngineUpdate> engineUpdate);
+
+			void setShowLogs(bool const state);
+			void toggleShowLogs(void);
+			bool getShowLogs(void) const;
+	};
+
 	class View : public IView
 	{
 		private:
 			std::shared_ptr<Platform> _platform;
+			std::shared_ptr<Model> _model;
 			std::shared_ptr<IView> _subView;
 
 		public:
@@ -22,6 +40,9 @@ namespace Global
 
 	class EventHandler : public EventDispatcher
 	{
+		private:
+			std::shared_ptr<Model> _model;
+
 		public:
 			EventHandler(
 				std::shared_ptr<Platform> platform,

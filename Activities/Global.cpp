@@ -5,6 +5,37 @@
 #include <VBN/Window.hpp>
 #include <VBN/Logging.hpp>
 
+#define LOG_WIDTH 1000
+#define LOG_HEIGHT 400
+
+Global::Model::Model(void) : _showLogs(true)
+{}
+
+std::shared_ptr<Global::Model> Global::Model::getInstance(void)
+{
+	static std::shared_ptr<Global::Model> instance(new Model);
+	return instance;
+}
+
+void Global::Model::elapse(Uint32 const gameTicks,
+	std::shared_ptr<EngineUpdate> engineUpdate)
+{}
+
+void Global::Model::setShowLogs(bool const state)
+{
+	_showLogs = state;
+}
+
+void Global::Model::toggleShowLogs(void)
+{
+	_showLogs = !_showLogs;
+}
+
+bool Global::Model::getShowLogs(void) const
+{
+	return _showLogs;
+}
+
 Global::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<IView> subView) :
 	_platform(platform),
@@ -22,7 +53,14 @@ void Global::View::display(void)
 	if (_subView)
 		_subView->display();
 
-	renderer->printText(getLogAggregate(), "courier", 12, { 255, 255, 255, 255 }, { 600, 200, 600, 600 });
+	if (Model::getInstance()->getShowLogs())
+	{
+		std::pair<int, int> winSize = mainWindow->getSize();
+		renderer->printText(getLogAggregate(),
+			"courier", 12, { 255, 255, 255, 255 },
+			{ winSize.first - LOG_WIDTH, winSize.second - LOG_HEIGHT,
+			LOG_WIDTH, LOG_HEIGHT});
+	}
 
 	renderer->present();
 }
@@ -65,6 +103,10 @@ void Global::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 		case SDLK_F11:
 			if(keyEvType == SDL_KEYDOWN)
 				mainWindow->toggleFullscreen();
+		break;
+		case SDLK_F12:
+			if(keyEvType == SDL_KEYDOWN)
+			Model::getInstance()->toggleShowLogs();
 		break;
 	}
 
