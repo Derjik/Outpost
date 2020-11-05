@@ -14,6 +14,7 @@ namespace Debug
 			std::shared_ptr<Platform> _platform;
 
 			std::pair<Sint16, Sint16> _leftJoystick;
+			std::pair<double, double> _leftPole;
 			std::pair<Sint16, Sint16> _rightJoystick;
 			std::pair<Sint16, Sint16> _triggers;
 			std::map<std::string, bool> _buttons;
@@ -24,6 +25,7 @@ namespace Debug
 				std::shared_ptr<EngineUpdate> engineUpdate);
 
 			std::pair<Sint16, Sint16> getLeftJoystick(void);
+			std::pair<double, double> getLeftPole(void);
 			std::pair<Sint16, Sint16> getRightJoystick(void);
 			std::pair<Sint16, Sint16> getTriggers(void);
 			bool getButton(std::string const & button);

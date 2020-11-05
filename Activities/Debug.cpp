@@ -8,6 +8,7 @@
 #include <VBN/GameControllerManager.hpp>
 #include <VBN/Logging.hpp>
 #include <sstream>
+#include <cmath>
 
 #define XBOX_CONTROLLER_TEXTURE_PATH "xbox_controller.png"
 #define XBOX_CONTROLLER_TEXTURE_NAME "XBox360Controller"
@@ -69,12 +70,21 @@ void Debug::Model::elapse(Uint32 const gameTicks,
 		_buttons["START"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_START);
 		_buttons["BACK"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_BACK);
 		_buttons["GUIDE"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_GUIDE);
+
+		_leftPole.first = fmin(sqrt(pow(_leftJoystick.first, 2.) + pow(_leftJoystick.second, 2.)), 120.f);
+		_leftPole.second = atan2((double)(_leftJoystick.second), (double)(_leftJoystick.first));// *(180.f / M_PI);
+		VERBOSE(SDL_LOG_CATEGORY_APPLICATION, "r : %f - theta : %f", _leftPole.first, _leftPole.second);
 	}
 }
 
 std::pair<Sint16, Sint16> Debug::Model::getLeftJoystick(void)
 {
 	return _leftJoystick;
+}
+
+std::pair<double, double> Debug::Model::getLeftPole(void)
+{
+	return _leftPole;
 }
 
 std::pair<Sint16, Sint16> Debug::Model::getRightJoystick(void)
@@ -167,12 +177,14 @@ void Debug::View::display(void)
 	// Draw left & right joystick crosshairs
 	renderer->setDrawColor(0, 194, 255, 255);
 	// LEFT
-	SDL_Rect lxr{ 200, 199, leftx, 3 };
-	SDL_Rect lyr{ 199, 200, 3, lefty };
-	renderer->fillRect(lxr);
-	renderer->fillRect(lyr);
-	renderer->drawLine(195 + leftx, 200 + lefty, 205 + leftx, 200 + lefty);
-	renderer->drawLine(200 + leftx, 195 + lefty, 200 + leftx, 205 + lefty);
+	//SDL_Rect lxr{ 200, 199, leftx, 3 };
+	//SDL_Rect lyr{ 199, 200, 3, lefty };
+	//renderer->fillRect(lxr);
+	//renderer->fillRect(lyr);
+	//renderer->drawLine(195 + leftx, 200 + lefty, 205 + leftx, 200 + lefty);
+	//renderer->drawLine(200 + leftx, 195 + lefty, 200 + leftx, 205 + lefty);
+	std::pair<double, double> pole = _model->getLeftPole();
+	renderer->drawLine(200, 200, 200 + pole.first * cos(pole.second), 200 + pole.first * sin(pole.second));
 	// RIGHT
 	SDL_Rect rxr{ 600, 199, rightx, 3 };
 	SDL_Rect ryr{ 599, 200, 3, righty };
