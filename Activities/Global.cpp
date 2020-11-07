@@ -56,7 +56,7 @@ void Global::View::display(void)
 	if (Model::getInstance()->getShowLogs())
 	{
 		std::pair<int, int> winSize = mainWindow->getSize();
-		renderer->printText(getLogAggregate(),
+		renderer->printText(Logger::lastLogs(),
 			"courier", 12, { 255, 255, 255, 255 },
 			{ winSize.first - LOG_WIDTH, winSize.second - LOG_HEIGHT,
 			LOG_WIDTH, LOG_HEIGHT});

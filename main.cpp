@@ -48,7 +48,7 @@ int main(int argc, char ** argv)
 		std::shared_ptr<Platform> platform(new Platform(
 			new WindowManager,
 			new GameControllerManager,
-			new Mixer(0)));
+			new Mixer(4)));
 
 		platform->getMixer()->loadEffect("sample.wav", "drum");
 		platform->getMixer()->loadMusic("music.flac", "ftl");
@@ -58,7 +58,7 @@ int main(int argc, char ** argv)
 			"SDL Main Window",
 			SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED,
-			1366, 768,
+			1600, 900,
 			Window::RatioType::FIXED_RATIO_STRETCH,
 			SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE,
 			SDL_RENDERER_ACCELERATED,
