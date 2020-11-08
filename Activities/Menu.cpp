@@ -127,26 +127,7 @@ void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 
 		break;
 		case Model::APP_1:
-			textModel = std::shared_ptr<Text::Model>(new Text::Model(_platform));
-			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
-				new GameContext(
-					textModel,
-					std::shared_ptr<IView>(new Global::View(
-						_platform,
-						std::shared_ptr<IView>(new Text::View(
-							_platform, textModel)))),
-					std::shared_ptr<IEventHandler>(
-						new Global::EventHandler(
-							_platform,
-							nullptr,
-							std::shared_ptr<IEventHandler>(
-								new Text::KeyboardEventHandler),
-							std::shared_ptr<IEventHandler>(
-								new Text::GameControllerEventHandler(textModel)),
-							nullptr,
-							nullptr)))
-				)
-			);
+			engineUpdate->pushGameContext(Text::Factory::createText(_platform));
 		break;
 		case Model::APP_2:
 			/*

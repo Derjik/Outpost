@@ -7,6 +7,13 @@
 
 namespace Text
 {
+	class Factory
+	{
+		public:
+			static std::shared_ptr<GameContext> createText(
+				std::shared_ptr<Platform> platform);
+	};
+
 	class Model : public IModel
 	{
 		private:

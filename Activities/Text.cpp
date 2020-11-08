@@ -1,11 +1,37 @@
 #include "Global.hpp"
-#include "Text.hpp"
 #include <VBN/Platform.hpp>
 #include "../GameContext.hpp"
+#include "Text.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
 #include <VBN/Logging.hpp>
+
+/* ----------------------------------------------- */
+/* ------------------- FACTORY ------------------- */
+/* ----------------------------------------------- */
+std::shared_ptr<GameContext> Text::Factory::createText(
+	std::shared_ptr<Platform> platform)
+{
+	std::shared_ptr<Text::Model> model(new Text::Model(platform));
+
+	return std::make_shared<GameContext>(
+				model,
+				std::make_shared<Global::View>(
+					platform,
+					std::make_shared<Text::View>(
+						platform,
+						model)),
+				std::make_shared<Global::EventHandler>(
+						platform,
+						nullptr,
+						std::make_shared<Text::KeyboardEventHandler>(),
+						std::make_shared<Text::GameControllerEventHandler>(
+							model),
+						nullptr,
+						nullptr)
+		);
+}
 
 /* ----------------------------------------------- */
 /* -------------------- MODEL -------------------- */
