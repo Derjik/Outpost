@@ -29,8 +29,11 @@ using namespace std;
 int main(int argc, char ** argv)
 {
 	int returnCode(0);
+
+	/* SDL sub-logger settings */
 	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 
+	/* SDL Modules initialization */
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
 	TTF_Init();
@@ -43,15 +46,21 @@ int main(int argc, char ** argv)
 
 	try
 	{
+		/* Acquire info on available hardware */
 		Introspection::perform();
 
+		/*
+		 * Initialize the current Platform :
+		 * - WindowManager : handles Window and Renderer instanciation
+		 * - GameControllerManager : manages GameController objects (if any)
+		 * - Mixer : handles sound effects
+		 */
 		std::shared_ptr<Platform> platform(new Platform(
 			new WindowManager,
 			new GameControllerManager,
-			new Mixer(4)));
-
-		platform->getMixer()->loadEffect("sample.wav", "drum");
-		platform->getMixer()->loadMusic("music.flac", "ftl");
+			new Mixer(0, "assets/audio/",
+				{ {"sample.wav", "drum"} },
+				{ {"music.flac", "ftl"} })));
 
 		platform->getWindowManager()->addWindow(
 			"mainWindow",
