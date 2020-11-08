@@ -14,6 +14,30 @@
 #define XBOX_CONTROLLER_TEXTURE_NAME "XBox360Controller"
 
 /* ----------------------------------------------- */
+/* ------------------- FACTORY ------------------- */
+/* ----------------------------------------------- */
+std::shared_ptr<GameContext> Debug::Factory::createDebug(
+	std::shared_ptr<Platform> platform)
+{
+	std::shared_ptr<Debug::Model> model(
+		std::make_shared<Debug::Model>(platform));
+
+	return std::make_shared<GameContext>(
+		model,
+		std::make_shared<Global::View>(
+			platform,
+			std::make_shared<Debug::View>(platform, model)),
+		std::make_shared<Global::EventHandler>(
+				platform,
+				nullptr,
+				std::make_shared<Debug::KeyboardEventHandler>(),
+				std::make_shared<Debug::GameControllerEventHandler>(
+					platform, model),
+				nullptr,
+				nullptr));
+}
+
+/* ----------------------------------------------- */
 /* -------------------- MODEL -------------------- */
 /* ----------------------------------------------- */
 
@@ -73,7 +97,7 @@ void Debug::Model::elapse(Uint32 const gameTicks,
 
 		_leftPole.first = fmin(sqrt(pow(_leftJoystick.first, 2.) + pow(_leftJoystick.second, 2.)), 120.f);
 		_leftPole.second = atan2((double)(_leftJoystick.second), (double)(_leftJoystick.first));// *(180.f / M_PI);
-		VERBOSE(SDL_LOG_CATEGORY_APPLICATION, "r : %f - theta : %f", _leftPole.first, _leftPole.second);
+		//VERBOSE(SDL_LOG_CATEGORY_APPLICATION, "r : %f - theta : %f", _leftPole.first, _leftPole.second);
 	}
 }
 

@@ -11,27 +11,23 @@
 std::shared_ptr<GameContext> Menu::Factory::createMenu(
 	std::shared_ptr<Platform> platform)
 {
-	std::shared_ptr<Menu::Model> menuModel(
+	std::shared_ptr<Menu::Model> model(
 		new Menu::Model);
-
-	std::shared_ptr<Menu::View> menuView(
-		new Menu::View(platform, menuModel));
-
 	std::shared_ptr<Menu::Controller> menuController(
-		new Menu::Controller(platform, menuModel));
+		new Menu::Controller(platform, model));
 
 	return std::make_shared<GameContext>(
-		menuModel,
-		std::shared_ptr<IView>(new Global::View(
+		model,
+		std::make_shared<Global::View>(
 			platform,
-			menuView)),
-		std::shared_ptr<IEventHandler>(new Global::EventHandler(
+			std::make_shared<Menu::View>(platform, model)),
+		std::make_shared<Global::EventHandler>(
 			platform,
 			nullptr,
-			std::shared_ptr<IEventHandler>(menuController),
-			std::shared_ptr<IEventHandler>(menuController),
+			menuController,
+			menuController,
 			nullptr,
-			nullptr))
+			nullptr)
 		);
 }
 
@@ -121,33 +117,14 @@ Menu::Controller::Controller(
 
 void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 {
-	std::shared_ptr<Debug::Model> debugModel(nullptr);
 	std::shared_ptr<Text::Model> textModel(nullptr);
 
 	switch(_model->getCurrentSelection())
 	{
 		case Model::DEBUG:
-			debugModel = std::shared_ptr<Debug::Model>(new Debug::Model(_platform));
-
 			engineUpdate->pushGameContext(
-				std::shared_ptr<IGameContext>(new GameContext(
-					debugModel,
-					std::shared_ptr<IView>(new Global::View(
-							_platform,
-							std::shared_ptr<IView>(
-								new Debug::View(_platform, debugModel)))),
-					std::shared_ptr<IEventHandler>(
-						new Global::EventHandler(
-							_platform,
-							nullptr,
-							std::shared_ptr<IEventHandler>(
-								new Debug::KeyboardEventHandler),
-							std::shared_ptr<IEventHandler>(
-								new Debug::GameControllerEventHandler(
-									_platform, debugModel)),
-							nullptr,
-							nullptr))))
-				);
+				Debug::Factory::createDebug(_platform));
+
 		break;
 		case Model::APP_1:
 			textModel = std::shared_ptr<Text::Model>(new Text::Model(_platform));
