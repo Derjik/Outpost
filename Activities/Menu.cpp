@@ -7,6 +7,34 @@
 #include <VBN/Platform.hpp>
 #include <VBN/Mixer.hpp>
 
+/* ----------------- FACTORY ----------------- */
+std::shared_ptr<GameContext> Menu::Factory::createMenu(
+	std::shared_ptr<Platform> platform)
+{
+	std::shared_ptr<Menu::Model> menuModel(
+		new Menu::Model);
+
+	std::shared_ptr<Menu::View> menuView(
+		new Menu::View(platform, menuModel));
+
+	std::shared_ptr<Menu::Controller> menuController(
+		new Menu::Controller(platform, menuModel));
+
+	return std::make_shared<GameContext>(
+		menuModel,
+		std::shared_ptr<IView>(new Global::View(
+			platform,
+			menuView)),
+		std::shared_ptr<IEventHandler>(new Global::EventHandler(
+			platform,
+			nullptr,
+			std::shared_ptr<IEventHandler>(menuController),
+			std::shared_ptr<IEventHandler>(menuController),
+			nullptr,
+			nullptr))
+		);
+}
+
 /* ------------------ MODEL ------------------ */
 
 Menu::Model::Model(void) :

@@ -13,6 +13,13 @@ class WindowManager;
 
 namespace Menu
 {
+	class Factory
+	{
+		public:
+			static std::shared_ptr<GameContext> createMenu(
+				std::shared_ptr<Platform> platform);
+	};
+
 	class Model : public IModel
 	{
 		public:

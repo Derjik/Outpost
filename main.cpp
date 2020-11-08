@@ -71,38 +71,13 @@ int main(int argc, char ** argv)
 			Window::RatioType::FIXED_RATIO_STRETCH,
 			SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE,
 			SDL_RENDERER_ACCELERATED,
-			std::shared_ptr<TrueTypeFontManager>(
-				new TrueTypeFontManager({ "noto", "courier", "arial" })));
+			std::make_shared<TrueTypeFontManager>(
+				"assets/fonts/",
+				std::set<std::string>{ "noto", "courier", "arial" }));
 
 		Introspection::log();
 
-		// M
-		std::shared_ptr<Menu::Model> menuModel(
-			new Menu::Model);
-
-		// V
-		std::shared_ptr<Menu::View> menuView(
-			new Menu::View(platform, menuModel));
-
-		// C
-		std::shared_ptr<Menu::Controller> menuController(
-			new Menu::Controller(platform, menuModel));
-
-		// M + V + C
-		std::shared_ptr<GameContext> menu(new GameContext(
-				menuModel,
-				std::shared_ptr<IView>(new Global::View(
-						platform,
-						menuView)),
-				std::shared_ptr<IEventHandler>(new Global::EventHandler(
-						platform,
-						nullptr,
-						std::shared_ptr<IEventHandler>(menuController),
-						std::shared_ptr<IEventHandler>(menuController),
-						nullptr,
-						nullptr))
-		));
-
+		std::shared_ptr<GameContext> menu(Menu::Factory::createMenu(platform));
 		std::shared_ptr<Engine> engine(new Engine(menu));
 		engine->run(1.f);
 	}
