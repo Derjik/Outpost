@@ -8,6 +8,14 @@
 
 namespace Pause
 {
+	class Factory
+	{
+		public:
+			static std::shared_ptr<GameContext> createPause(
+				std::shared_ptr<Platform> platform,
+				std::shared_ptr<IView> subView);
+	};
+
 	class GameControllerEventHandler : public IEventHandler
 	{
 		public:

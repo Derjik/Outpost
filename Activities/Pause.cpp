@@ -1,7 +1,29 @@
 #include "Pause.hpp"
+#include "Global.hpp"
 #include <VBN/Platform.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/WindowManager.hpp>
+
+std::shared_ptr<GameContext> Pause::Factory::createPause(
+	std::shared_ptr<Platform> platform,
+	std::shared_ptr<IView> subView)
+{
+	return std::make_shared<GameContext>(
+			nullptr,
+			std::make_shared<Global::View>(
+				platform,
+				std::make_shared<Pause::View>(
+					platform,
+					subView)),
+			std::make_shared<Global::EventHandler>(
+					platform,
+					nullptr,
+					nullptr,
+					std::make_shared<Pause::GameControllerEventHandler>(),
+					nullptr,
+					nullptr)
+		);
+}
 
 Pause::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<IView> background) :

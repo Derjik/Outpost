@@ -314,23 +314,11 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button START pressed on instance @%d",
 						event.cbutton.which);
-					update->pushGameContext(
-						std::shared_ptr<IGameContext>(new GameContext(
-						nullptr,
-						std::shared_ptr<IView>(new Global::View(
+					update->pushGameContext(Pause::Factory::createPause(
+						_platform,
+						std::make_shared<Debug::View>(
 							_platform,
-							std::shared_ptr<IView>(new Pause::View(
-								_platform,
-								std::shared_ptr<IView>(new View(
-									_platform, _model)))))),
-						std::shared_ptr<IEventHandler>(
-							new Global::EventHandler(
-								_platform,
-								nullptr,
-								nullptr,
-								std::shared_ptr<IEventHandler>(new Pause::GameControllerEventHandler),
-								nullptr,
-								nullptr)))));
+							_model)));
 				break;
 				case SDL_CONTROLLER_BUTTON_BACK:
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
