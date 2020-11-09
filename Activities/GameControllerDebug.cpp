@@ -1,5 +1,5 @@
 #include "Pause.hpp"
-#include "Debug.hpp"
+#include "GameControllerDebug.hpp"
 #include "Global.hpp"
 #include <VBN/Platform.hpp>
 #include "../GameContext.hpp"
@@ -16,22 +16,22 @@
 /* ----------------------------------------------- */
 /* ------------------- FACTORY ------------------- */
 /* ----------------------------------------------- */
-std::shared_ptr<GameContext> Debug::Factory::createDebug(
+std::shared_ptr<GameContext> GameControllerDebug::Factory::createGameControllerDebug(
 	std::shared_ptr<Platform> platform)
 {
-	std::shared_ptr<Debug::Model> model(
-		std::make_shared<Debug::Model>(platform));
+	std::shared_ptr<GameControllerDebug::Model> model(
+		std::make_shared<GameControllerDebug::Model>(platform));
 
 	return std::make_shared<GameContext>(
 		model,
 		std::make_shared<Global::View>(
 			platform,
-			std::make_shared<Debug::View>(platform, model)),
+			std::make_shared<GameControllerDebug::View>(platform, model)),
 		std::make_shared<Global::EventHandler>(
 				platform,
 				nullptr,
-				std::make_shared<Debug::KeyboardEventHandler>(),
-				std::make_shared<Debug::GameControllerEventHandler>(
+				std::make_shared<GameControllerDebug::KeyboardEventHandler>(),
+				std::make_shared<GameControllerDebug::GameControllerEventHandler>(
 					platform, model),
 				nullptr,
 				nullptr));
@@ -41,10 +41,10 @@ std::shared_ptr<GameContext> Debug::Factory::createDebug(
 /* -------------------- MODEL -------------------- */
 /* ----------------------------------------------- */
 
-Debug::Model::Model(std::shared_ptr<Platform> platform) : _platform(platform)
+GameControllerDebug::Model::Model(std::shared_ptr<Platform> platform) : _platform(platform)
 {}
 
-void Debug::Model::elapse(Uint32 const gameTicks,
+void GameControllerDebug::Model::elapse(Uint32 const gameTicks,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	GameControllerManager * gameControllerManager(nullptr);
@@ -101,32 +101,32 @@ void Debug::Model::elapse(Uint32 const gameTicks,
 	}
 }
 
-std::pair<Sint16, Sint16> Debug::Model::getLeftJoystick(void)
+std::pair<Sint16, Sint16> GameControllerDebug::Model::getLeftJoystick(void)
 {
 	return _leftJoystick;
 }
 
-std::pair<double, double> Debug::Model::getLeftPole(void)
+std::pair<double, double> GameControllerDebug::Model::getLeftPole(void)
 {
 	return _leftPole;
 }
 
-std::pair<Sint16, Sint16> Debug::Model::getRightJoystick(void)
+std::pair<Sint16, Sint16> GameControllerDebug::Model::getRightJoystick(void)
 {
 	return _rightJoystick;
 }
 
-std::pair<Sint16, Sint16> Debug::Model::getTriggers(void)
+std::pair<Sint16, Sint16> GameControllerDebug::Model::getTriggers(void)
 {
 	return _triggers;
 }
 
-bool Debug::Model::getButton(std::string const & button)
+bool GameControllerDebug::Model::getButton(std::string const & button)
 {
 	return _buttons[button];
 }
 
-std::map<std::string, bool> const & Debug::Model::getButtons(void) const
+std::map<std::string, bool> const & GameControllerDebug::Model::getButtons(void) const
 {
 	return _buttons;
 }
@@ -135,7 +135,7 @@ std::map<std::string, bool> const & Debug::Model::getButtons(void) const
 /* -------------------- VIEW -------------------- */
 /* ---------------------------------------------- */
 
-Debug::View::View(std::shared_ptr<Platform> platform,
+GameControllerDebug::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
@@ -164,7 +164,7 @@ Debug::View::View(std::shared_ptr<Platform> platform,
 	}
 }
 
-void Debug::View::display(void)
+void GameControllerDebug::View::display(void)
 {
 	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
 	Renderer * renderer = mainWindow->getRenderer();
@@ -262,7 +262,7 @@ void Debug::View::display(void)
 /* -------------------- CONTROLLER -------------------- */
 /* ---------------------------------------------------- */
 
-void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
+void GameControllerDebug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	switch(event.type)
@@ -278,17 +278,17 @@ void Debug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 	}
 }
 
-Debug::GameControllerEventHandler::GameControllerEventHandler(
+GameControllerDebug::GameControllerEventHandler::GameControllerEventHandler(
 	std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
 {}
 
-Debug::GameControllerEventHandler::~GameControllerEventHandler(void)
+GameControllerDebug::GameControllerEventHandler::~GameControllerEventHandler(void)
 {}
 
-void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
+void GameControllerDebug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> update)
 {
 	GameController * controller(nullptr);
@@ -316,7 +316,7 @@ void Debug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 						event.cbutton.which);
 					update->pushGameContext(Pause::Factory::createPause(
 						_platform,
-						std::make_shared<Debug::View>(
+						std::make_shared<GameControllerDebug::View>(
 							_platform,
 							_model)));
 				break;

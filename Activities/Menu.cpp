@@ -1,7 +1,7 @@
 #include "Menu.hpp"
 #include "Global.hpp"
 #include "Text.hpp"
-#include "Debug.hpp"
+#include "GameControllerDebug.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/Platform.hpp>
@@ -123,7 +123,8 @@ void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 	{
 		case Model::DEBUG:
 			engineUpdate->pushGameContext(
-				Debug::Factory::createDebug(_platform));
+				GameControllerDebug::Factory::createGameControllerDebug(
+					_platform));
 
 		break;
 		case Model::APP_1:

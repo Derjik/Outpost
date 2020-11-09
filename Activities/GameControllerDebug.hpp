@@ -6,12 +6,12 @@
 #include <VBN/IView.hpp>
 #include <VBN/IEventHandler.hpp>
 
-namespace Debug
+namespace GameControllerDebug
 {
 	class Factory
 	{
 		public:
-			static std::shared_ptr<GameContext> createDebug(
+			static std::shared_ptr<GameContext> createGameControllerDebug(
 				std::shared_ptr<Platform> platform);
 	};
 
