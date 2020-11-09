@@ -5,12 +5,12 @@
 #include <VBN/IView.hpp>
 #include <VBN/IEventHandler.hpp>
 
-namespace Text
+namespace TextDebug
 {
 	class Factory
 	{
 		public:
-			static std::shared_ptr<GameContext> createText(
+			static std::shared_ptr<GameContext> createTextDebug(
 				std::shared_ptr<Platform> platform);
 	};
 

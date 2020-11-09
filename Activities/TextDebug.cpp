@@ -1,7 +1,7 @@
 #include "Global.hpp"
 #include <VBN/Platform.hpp>
 #include "../GameContext.hpp"
-#include "Text.hpp"
+#include "TextDebug.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/GameControllerManager.hpp>
@@ -10,23 +10,23 @@
 /* ----------------------------------------------- */
 /* ------------------- FACTORY ------------------- */
 /* ----------------------------------------------- */
-std::shared_ptr<GameContext> Text::Factory::createText(
+std::shared_ptr<GameContext> TextDebug::Factory::createTextDebug(
 	std::shared_ptr<Platform> platform)
 {
-	std::shared_ptr<Text::Model> model(new Text::Model(platform));
+	std::shared_ptr<TextDebug::Model> model(new TextDebug::Model(platform));
 
 	return std::make_shared<GameContext>(
 				model,
 				std::make_shared<Global::View>(
 					platform,
-					std::make_shared<Text::View>(
+					std::make_shared<TextDebug::View>(
 						platform,
 						model)),
 				std::make_shared<Global::EventHandler>(
 						platform,
 						nullptr,
-						std::make_shared<Text::KeyboardEventHandler>(),
-						std::make_shared<Text::GameControllerEventHandler>(
+						std::make_shared<TextDebug::KeyboardEventHandler>(),
+						std::make_shared<TextDebug::GameControllerEventHandler>(
 							model),
 						nullptr,
 						nullptr)
@@ -37,7 +37,7 @@ std::shared_ptr<GameContext> Text::Factory::createText(
 /* -------------------- MODEL -------------------- */
 /* ----------------------------------------------- */
 
-Text::Model::Model(std::shared_ptr<Platform> platform) :
+TextDebug::Model::Model(std::shared_ptr<Platform> platform) :
 	_platform(platform),
 	_fontSize(18),
 	_drawSpace({45, 45, 600, 600}),
@@ -45,7 +45,7 @@ Text::Model::Model(std::shared_ptr<Platform> platform) :
 	upGT(0), downGT(0), leftGT(0), rightGT(0)
 {}
 
-void Text::Model::elapse(Uint32 const gameTicks,
+void TextDebug::Model::elapse(Uint32 const gameTicks,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	GameControllerManager * gameControllerManager(nullptr);
@@ -170,62 +170,62 @@ void Text::Model::elapse(Uint32 const gameTicks,
 	}
 }
 
-unsigned int Text::Model::getFontSize(void)
+unsigned int TextDebug::Model::getFontSize(void)
 {
 	return _fontSize;
 }
 
-SDL_Rect const & Text::Model::getDrawSpace(void)
+SDL_Rect const & TextDebug::Model::getDrawSpace(void)
 {
 	return _drawSpace;
 }
 
-void Text::Model::p1left(int amount)
+void TextDebug::Model::p1left(int amount)
 {
 	_drawSpace.x -= amount;
 }
 
-void Text::Model::p1right(int amount)
+void TextDebug::Model::p1right(int amount)
 {
 	_drawSpace.x += amount;
 }
 
-void Text::Model::p1up(int amount)
+void TextDebug::Model::p1up(int amount)
 {
 	_drawSpace.y -= amount;
 }
 
-void Text::Model::p1down(int amount)
+void TextDebug::Model::p1down(int amount)
 {
 	_drawSpace.y += amount;
 }
 
-void Text::Model::p2left(int amount)
+void TextDebug::Model::p2left(int amount)
 {
 	_drawSpace.w -= amount;
 }
 
-void Text::Model::p2right(int amount)
+void TextDebug::Model::p2right(int amount)
 {
 	_drawSpace.w += amount;
 }
 
-void Text::Model::p2up(int amount)
+void TextDebug::Model::p2up(int amount)
 {
 	_drawSpace.h -= amount;
 }
 
-void Text::Model::p2down(int amount)
+void TextDebug::Model::p2down(int amount)
 {
 	_drawSpace.h += amount;
 }
 
-void Text::Model::upFont(int amount)
+void TextDebug::Model::upFont(int amount)
 {
 	_fontSize += amount;
 }
 
-void Text::Model::downFont(int amount)
+void TextDebug::Model::downFont(int amount)
 {
 	_fontSize -= amount;
 }
@@ -234,13 +234,13 @@ void Text::Model::downFont(int amount)
 /* -------------------- VIEW -------------------- */
 /* ---------------------------------------------- */
 
-Text::View::View(std::shared_ptr<Platform> platform,
+TextDebug::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
 {}
 
-void Text::View::display(void)
+void TextDebug::View::display(void)
 {
 	// Acquire Window & Renderer for later use
 	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
@@ -251,10 +251,10 @@ void Text::View::display(void)
 	renderer->fill();
 
 	// Print current app name
-	//renderer->printText("TEXT", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
+	//renderer->printTextDebug("TEXT", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
 
 	// Print debug text in dynamically-adjusted Drawing Space
-	renderer->printText("Lorem ipsum dolor sit amet, consectetur adipiscing "
+	renderer->printTextDebug("Lorem ipsum dolor sit amet, consectetur adipiscing "
 		"elit, sed do eiusmod tempor incididunt ut labore et dolore magna "
 		"aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco "
 		"laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure "
@@ -265,7 +265,7 @@ void Text::View::display(void)
 		"courier", _model->getFontSize(), { 255, 255, 255, 255 },
 		_model->getDrawSpace());
 	/*
-	renderer->printText("ABCDEF\n",
+	renderer->printTextDebug("ABCDEF\n",
 		"courier", _model->getFontSize(), { 255, 255, 255, 255 },
 		_model->getDrawSpace());
 	*/
@@ -275,7 +275,7 @@ void Text::View::display(void)
 /* -------------------- CONTROLLER -------------------- */
 /* ---------------------------------------------------- */
 
-void Text::KeyboardEventHandler::handleEvent(SDL_Event const & event,
+void TextDebug::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	switch(event.type)
@@ -291,11 +291,11 @@ void Text::KeyboardEventHandler::handleEvent(SDL_Event const & event,
 	}
 }
 
-Text::GameControllerEventHandler::GameControllerEventHandler(
+TextDebug::GameControllerEventHandler::GameControllerEventHandler(
 	std::shared_ptr<Model> model) : _model(model)
 {}
 
-void Text::GameControllerEventHandler::handleEvent(SDL_Event const & event,
+void TextDebug::GameControllerEventHandler::handleEvent(SDL_Event const & event,
 	std::shared_ptr<EngineUpdate> engineUpdate)
 {
 	switch (event.type)
