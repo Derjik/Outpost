@@ -254,34 +254,27 @@ void Menu::View::display(void)
 	menuItems[3] = { 220, 220, 600, 32 };
 	menuItems[4] = { 220, 260, 600, 32 };
 
-	mainWindow->getRenderer()->printText(
-		"Some complex multi-line text",
-		"courier",
-		20,
-		_model->getTextColor(),
-		{40,100,150,150});
-
 	/* Print menu items */
 	mainWindow->getRenderer()->printText(
-		"A - App 1",
+		"A - New Game",
 		"courier",
 		20,
 		_model->getTextColor(),
 		menuItems[0]);
 	mainWindow->getRenderer()->printText(
-		"B - App 2",
+		"B - Game Controller Debug",
 		"courier",
 		20,
 		_model->getTextColor(),
 		menuItems[1]);
 	mainWindow->getRenderer()->printText(
-		"C - App 3",
+		"C - Text Display Debug",
 		"courier",
 		20,
 		_model->getTextColor(),
 		menuItems[2]);
 	mainWindow->getRenderer()->printText(
-		"D - Debug",
+		"D - <EMPTY>",
 		"courier",
 		20,
 		_model->getTextColor(),
