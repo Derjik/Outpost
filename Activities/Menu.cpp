@@ -1,6 +1,6 @@
 #include "Menu.hpp"
 #include "Global.hpp"
-#include "Text.hpp"
+#include "TextDebug.hpp"
 #include "GameControllerDebug.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
@@ -32,13 +32,12 @@ std::shared_ptr<GameContext> Menu::Factory::createMenu(
 }
 
 /* ------------------ MODEL ------------------ */
-
 Menu::Model::Model(void) :
 	_menuEntries{
 		Menu::Model::Item::APP_1,
 		Menu::Model::Item::APP_2,
 		Menu::Model::Item::APP_3,
-		Menu::Model::Item::DEBUG,
+		Menu::Model::Item::APP_4,
 		Menu::Model::Item::EXIT},
 	_currentSelection(0),
 	_backgroundColor{0, 0, 0, 255},
@@ -117,30 +116,22 @@ Menu::Controller::Controller(
 
 void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 {
-	std::shared_ptr<Text::Model> textModel(nullptr);
-
 	switch(_model->getCurrentSelection())
 	{
-		case Model::DEBUG:
+		case Model::APP_1:
+		break;
+		case Model::APP_2:
 			engineUpdate->pushGameContext(
 				GameControllerDebug::Factory::createGameControllerDebug(
 					_platform));
 
 		break;
-		case Model::APP_1:
-			engineUpdate->pushGameContext(Text::Factory::createText(_platform));
-		break;
-		case Model::APP_2:
-			/*
-			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
-				new GCGame(_windowManager, _gameControllerManager)));
-			*/
-		break;
 		case Model::APP_3:
-			/*
-			engineUpdate->pushGameContext(std::shared_ptr<IGameContext>(
-				new GCGame(_windowManager, _gameControllerManager)));
-			*/
+			engineUpdate->pushGameContext(
+				TextDebug::Factory::createTextDebug(
+					_platform));
+		break;
+		case Model::APP_4:
 		break;
 		case Model::EXIT:
 			engineUpdate->popGameContext();
@@ -192,7 +183,7 @@ void Menu::Controller::handleEvent(SDL_Event const & event,
 				break;
 
 				case SDLK_d:
-					_model->cycleTo(Model::DEBUG);
+					_model->cycleTo(Model::APP_4);
 				break;
 
 				case SDLK_m:

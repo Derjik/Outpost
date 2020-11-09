@@ -28,7 +28,7 @@ namespace Menu
 				APP_1,
 				APP_2,
 				APP_3,
-				DEBUG,
+				APP_4,
 				EXIT
 			};
 
