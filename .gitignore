@@ -3,6 +3,7 @@
 *.png
 *.wav
 *.flac
+assets/
 
 # Object modules
 *.o
