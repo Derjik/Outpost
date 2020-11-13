@@ -10,7 +10,7 @@
 #include <sstream>
 #include <cmath>
 
-#define XBOX_CONTROLLER_TEXTURE_PATH "xbox_controller.png"
+#define XBOX_CONTROLLER_TEXTURE_PATH "assets/textures/xbox_px.png"
 #define XBOX_CONTROLLER_TEXTURE_NAME "XBox360Controller"
 
 /* ----------------------------------------------- */
@@ -95,8 +95,10 @@ void GameControllerDebug::Model::elapse(Uint32 const gameTicks,
 		_buttons["BACK"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_BACK);
 		_buttons["GUIDE"] = SDL_GameControllerGetButton(sdlController, SDL_CONTROLLER_BUTTON_GUIDE);
 
-		_leftPole.first = fmin(sqrt(pow(_leftJoystick.first, 2.) + pow(_leftJoystick.second, 2.)), 120.f);
+		_leftPole.first = fmin(sqrt(pow(_leftJoystick.first, 2.) + pow(_leftJoystick.second, 2.)), 120.f)/10;
 		_leftPole.second = atan2((double)(_leftJoystick.second), (double)(_leftJoystick.first));// *(180.f / M_PI);
+		_rightPole.first = fmin(sqrt(pow(_rightJoystick.first, 2.) + pow(_rightJoystick.second, 2.)), 120.f)/10;
+		_rightPole.second = atan2((double)(_rightJoystick.second), (double)(_rightJoystick.first));// *(180.f / M_PI);
 		//VERBOSE(SDL_LOG_CATEGORY_APPLICATION, "r : %f - theta : %f", _leftPole.first, _leftPole.second);
 	}
 }
@@ -114,6 +116,11 @@ std::pair<double, double> GameControllerDebug::Model::getLeftPole(void)
 std::pair<Sint16, Sint16> GameControllerDebug::Model::getRightJoystick(void)
 {
 	return _rightJoystick;
+}
+
+std::pair<double, double> GameControllerDebug::Model::getRightPole(void)
+{
+	return _rightPole;
 }
 
 std::pair<Sint16, Sint16> GameControllerDebug::Model::getTriggers(void)
@@ -153,14 +160,46 @@ GameControllerDebug::View::View(std::shared_ptr<Platform> platform,
 			XBOX_CONTROLLER_TEXTURE_PATH);
 
 		Texture * controller = renderer->getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
-		controller->addClip("A", { 878, 55, 78, 78 });
-		controller->addClip("B", { 1038, 55, 78, 78 });
-		controller->addClip("X", { 798, 55, 78, 78 });
-		controller->addClip("Y", { 958, 55, 78, 78 });
-		controller->addClip("BACK", { 491, 44, 81, 77 });
-		controller->addClip("START", { 712, 44, 84, 77 });
-		controller->addClip("GUIDE", { 574, 24, 136, 138 });
-		controller->addClip("DPAD", { 154, 1, 184, 186 });
+		controller->addClip("A_off", { 0, 0, 32, 32 });
+		controller->addClip("A_on", { 32, 0, 32, 32 });
+		controller->addClip("B_off", { 64, 0, 32, 32 });
+		controller->addClip("B_on", { 96, 0, 32, 32 });
+		controller->addClip("X_off", { 128, 0, 32, 32 });
+		controller->addClip("X_on", { 160, 0, 32, 32 });
+		controller->addClip("Y_off", { 192, 0, 32, 32 });
+		controller->addClip("Y_on", { 224, 0, 32, 32 });
+		controller->addClip("LEFT_off", { 0, 32, 32, 32 });
+		controller->addClip("LEFT_on", { 32, 32, 32, 32 });
+		controller->addClip("RIGHT_off", { 64, 32, 32, 32 });
+		controller->addClip("RIGHT_on", { 96, 32, 32, 32 });
+		controller->addClip("UP_off", { 128, 32, 32, 32 });
+		controller->addClip("UP_on", { 160, 32, 32, 32 });
+		controller->addClip("DOWN_off", { 192, 32, 32, 32 });
+		controller->addClip("DOWN_on", { 224, 32, 32, 32 });
+		controller->addClip("BACK_off", { 0, 64, 32, 32 });
+		controller->addClip("BACK_on", { 32, 64, 32, 32 });
+		controller->addClip("START_off", { 64, 64, 32, 32 });
+		controller->addClip("START_on", { 96, 64, 32, 32 });
+		controller->addClip("RSH_off", { 128, 64, 32, 32 });
+		controller->addClip("RSH_on", { 160, 64, 32, 32 });
+		controller->addClip("LSH_off", { 192, 64, 32, 32 });
+		controller->addClip("LSH_on", { 224, 64, 32, 32 });
+		controller->addClip("LTR_0", { 0, 96, 32, 32 });
+		controller->addClip("LTR_1", { 32, 96, 32, 32 });
+		controller->addClip("LTR_2", { 64, 96, 32, 32 });
+		controller->addClip("LTR_3", { 96, 96, 32, 32 });
+		controller->addClip("LTR_4", { 128, 96, 32, 32 });
+		controller->addClip("LTR_5", { 160, 96, 32, 32 });
+		controller->addClip("RTR_0", { 192, 96, 32, 32 });
+		controller->addClip("RTR_1", { 224, 96, 32, 32 });
+		controller->addClip("RTR_2", { 0, 128, 32, 32 });
+		controller->addClip("RTR_3", { 32, 128, 32, 32 });
+		controller->addClip("RTR_4", { 64, 128, 32, 32 });
+		controller->addClip("RTR_5", { 96, 128, 32, 32 });
+		controller->addClip("GUIDE_off", { 128, 128, 32, 32 });
+		controller->addClip("GUIDE_on", { 160, 128, 32, 32 });
+		controller->addClip("JOY_off", { 0, 192, 32, 32 });
+		controller->addClip("JOY_on", { 32, 192, 32, 32 });
 	}
 }
 
@@ -169,7 +208,7 @@ void GameControllerDebug::View::display(void)
 	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
 	Renderer * renderer = mainWindow->getRenderer();
 
-	renderer->setDrawColor(0, 0, 32, 255);
+	renderer->setDrawColor(0, 0, 0, 255);
 	renderer->fill();
 
 	renderer->printText("DEBUG", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
@@ -201,61 +240,156 @@ void GameControllerDebug::View::display(void)
 	// Draw left & right joystick crosshairs
 	renderer->setDrawColor(0, 194, 255, 255);
 	// LEFT
-	//SDL_Rect lxr{ 200, 199, leftx, 3 };
-	//SDL_Rect lyr{ 199, 200, 3, lefty };
-	//renderer->fillRect(lxr);
-	//renderer->fillRect(lyr);
-	//renderer->drawLine(195 + leftx, 200 + lefty, 205 + leftx, 200 + lefty);
-	//renderer->drawLine(200 + leftx, 195 + lefty, 200 + leftx, 205 + lefty);
-	std::pair<double, double> pole = _model->getLeftPole();
-	renderer->drawLine(200, 200, 200 + pole.first * cos(pole.second), 200 + pole.first * sin(pole.second));
+	std::pair<double, double> leftPole = _model->getLeftPole();
+	//renderer->drawLine(232, 600, 232 + leftPole.first * cos(leftPole.second), 600 + leftPole.first * sin(leftPole.second));
 	// RIGHT
-	SDL_Rect rxr{ 600, 199, rightx, 3 };
-	SDL_Rect ryr{ 599, 200, 3, righty };
-	renderer->fillRect(rxr);
-	renderer->fillRect(ryr);
-	renderer->drawLine(595 + rightx, 200 + righty, 605 + rightx, 200 + righty);
-	renderer->drawLine(600 + rightx, 195 + righty, 600 + rightx, 205 + righty);
+	std::pair<double, double> rightPole = _model->getRightPole();
+	//renderer->drawLine(432, 600, 432 + rightPole.first * cos(rightPole.second), 600 + rightPole.first * sin(rightPole.second));
 
 	// Draw left & right trigger levels
-	SDL_Rect leftr{ 200, 400, 3, ltrigger };
-	SDL_Rect rightr{ 600, 400, 3, rtrigger };
-	renderer->fillRect(leftr);
-	renderer->fillRect(rightr);
+	//SDL_Rect leftr{ 200, 400, 3, ltrigger };
+	//SDL_Rect rightr{ 600, 400, 3, rtrigger };
+	//renderer->fillRect(leftr);
+	//renderer->fillRect(rightr);
 
-	int
-		buttonsXOffset(500), buttonsYOffset(150),
-		dpadXOffset(250), dpadYOffset(150);
+	int dpadX(100), dpadY(400);
+	SDL_Rect dDest{ dpadX, dpadY + 32, 64, 64 };
+	SDL_Rect rDest{ dpadX + 32, dpadY, 64, 64 };
+	SDL_Rect lDest{ dpadX - 32, dpadY, 64, 64 };
+	SDL_Rect uDest{ dpadX, dpadY - 32, 64, 64 };
+	SDL_Rect backDest{ dpadX + 96, dpadY, 64, 64 };
 
-	Texture * controller = renderer->getTexture(XBOX_CONTROLLER_TEXTURE_NAME);
-	SDL_Rect
-		aDest{ buttonsXOffset + 300, buttonsYOffset + 200, 78, 78 },
-		bDest{ buttonsXOffset + 378, buttonsYOffset + 122, 78, 78 },
-		xDest{ buttonsXOffset + 222, buttonsYOffset + 122, 78, 78 },
-		yDest{ buttonsXOffset + 300, buttonsYOffset + 44, 78, 78 },
-		dpadDest{ dpadXOffset, dpadYOffset, 184, 186 };
+	int buttonsX(dpadX + 8*32), buttonsY(400);
+	SDL_Rect aDest{ buttonsX, buttonsY + 32, 64, 64 };
+	SDL_Rect bDest{ buttonsX + 32, buttonsY, 64, 64 };
+	SDL_Rect xDest{ buttonsX - 32, buttonsY, 64, 64 };
+	SDL_Rect yDest{ buttonsX, buttonsY - 32, 64, 64 };
+	SDL_Rect startDest{ buttonsX - 96, buttonsY, 64, 64 };
+
+	SDL_Rect guideDest{ dpadX + 128, dpadY + 32, 64, 64 };
+
+	SDL_Rect lshDest{ dpadX, dpadY - 128, 64, 64};
+	SDL_Rect rshDest{ buttonsX, buttonsY - 128, 64, 64};
+
+	SDL_Rect ltDest{ dpadX, dpadY - 80, 64, 64};
+	SDL_Rect rtDest{ buttonsX, buttonsY - 80, 64, 64};
+
+	SDL_Rect leftJoyDest{ dpadX + 64 + leftPole.first * cos(leftPole.second), dpadY + 96 + leftPole.first * sin(leftPole.second), 64, 64};
+	SDL_Rect rightJoyDest{ buttonsX - 64 + rightPole.first * cos(rightPole.second), buttonsY + 96 + rightPole.first * sin(rightPole.second), 64, 64};
+
+	/*
+	for (int i(0); i < 12; ++i)
+	{
+		for (int j(0); j < 8; ++j)
+		{
+			renderer->drawRect({ dpadX + (i - 2) * 32, dpadY + (j - 5) * 32, 64, 64 });
+		}
+	}
+	*/
 
 	if (_model->getButton("A"))
-		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "A", aDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "A_on", aDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "A_off", aDest);
 
 	if (_model->getButton("B"))
-		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "B", bDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "B_on", bDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "B_off", bDest);
 
 	if (_model->getButton("X"))
-		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "X", xDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "X_on", xDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "X_off", xDest);
 
 	if (_model->getButton("Y"))
-		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "Y", yDest);
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "Y_on", yDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "Y_off", yDest);
 
-	if (_model->getButton("UP") ||
-		_model->getButton("DOWN") ||
-		_model->getButton("LEFT") ||
-		_model->getButton("RIGHT"))
-		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "DPAD", dpadDest);
+	if (_model->getButton("DOWN"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "DOWN_on", dDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "DOWN_off", dDest);
 
-	renderer->setDrawColor(200, 20, 20, 255);
+	if (_model->getButton("RIGHT"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RIGHT_on", rDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RIGHT_off", rDest);
+
+	if (_model->getButton("LEFT"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LEFT_on", lDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LEFT_off", lDest);
+
 	if (_model->getButton("UP"))
-		renderer->drawRect({ dpadXOffset + 49, dpadYOffset, 86, 66 });
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "UP_on", uDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "UP_off", uDest);
+
+	if (_model->getButton("BACK"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "BACK_on", backDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "BACK_off", backDest);
+
+	if (_model->getButton("START"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "START_on", startDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "START_off", startDest);
+
+	if (_model->getButton("GUIDE"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "GUIDE_on", guideDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "GUIDE_off", guideDest);
+
+	if (_model->getButton("LSHOULDER"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LSH_on", lshDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LSH_off", lshDest);
+
+	if (_model->getButton("RSHOULDER"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RSH_on", rshDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RSH_off", rshDest);
+
+	if (_model->getButton("LSTICK"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "JOY_on", leftJoyDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "JOY_off", leftJoyDest);
+
+	if (_model->getButton("RSTICK"))
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "JOY_on", rightJoyDest);
+	else
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "JOY_off", rightJoyDest);
+
+	Sint16 leftT = ltrigger / 22;
+	Sint16 rightT = rtrigger / 22;
+
+	if (leftT == 0)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LTR_0", ltDest);
+	else if(leftT == 1)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LTR_1", ltDest);
+	else if(leftT == 2)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LTR_2", ltDest);
+	else if(leftT == 3)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LTR_3", ltDest);
+	else if(leftT == 4)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LTR_4", ltDest);
+	else if(leftT == 5)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "LTR_5", ltDest);
+
+	if (rightT == 0)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RTR_0", rtDest);
+	else if(rightT == 1)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RTR_1", rtDest);
+	else if(rightT == 2)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RTR_2", rtDest);
+	else if(rightT == 3)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RTR_3", rtDest);
+	else if(rightT == 4)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RTR_4", rtDest);
+	else if(rightT == 5)
+		renderer->copy(XBOX_CONTROLLER_TEXTURE_NAME, "RTR_5", rtDest);
 }
 
 /* ---------------------------------------------------- */
@@ -353,8 +487,10 @@ void GameControllerDebug::GameControllerEventHandler::handleEvent(SDL_Event cons
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,
 						"Button A pressed on instance @%d",
 						event.cbutton.which);
+					/*
 					if (controller)
 						controller->rumble(1.f, 2500);
+						*/
 				break;
 				case SDL_CONTROLLER_BUTTON_B:
 					DEBUG(SDL_LOG_CATEGORY_APPLICATION,

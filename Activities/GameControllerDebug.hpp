@@ -23,6 +23,7 @@ namespace GameControllerDebug
 			std::pair<Sint16, Sint16> _leftJoystick;
 			std::pair<double, double> _leftPole;
 			std::pair<Sint16, Sint16> _rightJoystick;
+			std::pair<double, double> _rightPole;
 			std::pair<Sint16, Sint16> _triggers;
 			std::map<std::string, bool> _buttons;
 
@@ -34,6 +35,7 @@ namespace GameControllerDebug
 			std::pair<Sint16, Sint16> getLeftJoystick(void);
 			std::pair<double, double> getLeftPole(void);
 			std::pair<Sint16, Sint16> getRightJoystick(void);
+			std::pair<double, double> getRightPole(void);
 			std::pair<Sint16, Sint16> getTriggers(void);
 			bool getButton(std::string const & button);
 			std::map<std::string, bool> const & getButtons(void) const;
