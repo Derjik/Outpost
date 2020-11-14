@@ -99,7 +99,7 @@ void GameControllerDebug::Model::elapse(Uint32 const gameTicks,
 		_leftPole.second = atan2((double)(_leftJoystick.second), (double)(_leftJoystick.first));// *(180.f / M_PI);
 		_rightPole.first = fmin(sqrt(pow(_rightJoystick.first, 2.) + pow(_rightJoystick.second, 2.)), 120.f)/10;
 		_rightPole.second = atan2((double)(_rightJoystick.second), (double)(_rightJoystick.first));// *(180.f / M_PI);
-		//VERBOSE(SDL_LOG_CATEGORY_APPLICATION, "r : %f - theta : %f", _leftPole.first, _leftPole.second);
+		VERBOSE(SDL_LOG_CATEGORY_APPLICATION, "r : %f - theta : %f", _leftPole.first, _leftPole.second);
 	}
 }
 
@@ -149,7 +149,6 @@ GameControllerDebug::View::View(std::shared_ptr<Platform> platform,
 {
 	Window * mainWindow(_platform->getWindowManager()->getWindowByName("mainWindow"));
 	Renderer * renderer(nullptr);
-	Texture * xboxController(nullptr);
 	if (mainWindow)
 		renderer = mainWindow->getRenderer();
 

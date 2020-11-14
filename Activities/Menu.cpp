@@ -2,6 +2,7 @@
 #include "Global.hpp"
 #include "TextDebug.hpp"
 #include "GameControllerDebug.hpp"
+#include "Tank.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>
 #include <VBN/Platform.hpp>
@@ -119,12 +120,14 @@ void Menu::Controller::performAction(std::shared_ptr<EngineUpdate> engineUpdate)
 	switch(_model->getCurrentSelection())
 	{
 		case Model::APP_1:
+			engineUpdate->pushGameContext(
+				Tank::Factory::createGameControllerDebug(
+					_platform));
 		break;
 		case Model::APP_2:
 			engineUpdate->pushGameContext(
 				GameControllerDebug::Factory::createGameControllerDebug(
 					_platform));
-
 		break;
 		case Model::APP_3:
 			engineUpdate->pushGameContext(
