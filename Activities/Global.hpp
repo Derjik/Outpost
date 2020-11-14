@@ -9,6 +9,20 @@ class Platform;
 
 namespace Global
 {
+	class Factory
+	{
+		public:
+			static std::shared_ptr<GameContext> createGlobal(
+				std::shared_ptr<Platform> platform,
+				std::shared_ptr<IModel> subModel,
+				std::shared_ptr<IView> subView,
+				std::shared_ptr<IEventHandler> mouse,
+				std::shared_ptr<IEventHandler> keyboard,
+				std::shared_ptr<IEventHandler> gameController,
+				std::shared_ptr<IEventHandler> joystick,
+				std::shared_ptr<IEventHandler> window);
+	};
+
 	class Model : public IModel
 	{
 		private:
@@ -29,7 +43,6 @@ namespace Global
 	{
 		private:
 			std::shared_ptr<Platform> _platform;
-			std::shared_ptr<Model> _model;
 			std::shared_ptr<IView> _subView;
 
 		public:
@@ -40,9 +53,6 @@ namespace Global
 
 	class EventHandler : public EventDispatcher
 	{
-		private:
-			std::shared_ptr<Model> _model;
-
 		public:
 			EventHandler(
 				std::shared_ptr<Platform> platform,

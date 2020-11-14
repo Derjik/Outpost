@@ -1,6 +1,6 @@
-#include "Global.hpp"
 #include <VBN/Platform.hpp>
 #include "../GameContext.hpp"
+#include "Global.hpp"
 #include "TextDebug.hpp"
 #include <VBN/WindowManager.hpp>
 #include <VBN/EngineUpdate.hpp>

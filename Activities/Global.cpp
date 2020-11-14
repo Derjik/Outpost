@@ -1,3 +1,4 @@
+#include "../GameContext.hpp"
 #include "Global.hpp"
 #include <VBN/Platform.hpp>
 #include <VBN/GameControllerManager.hpp>
@@ -7,6 +8,29 @@
 
 #define LOG_WIDTH 1000
 #define LOG_HEIGHT 400
+
+std::shared_ptr<GameContext> Global::Factory::createGlobal(
+	std::shared_ptr<Platform> platform,
+	std::shared_ptr<IModel> subModel,
+	std::shared_ptr<IView> subView,
+	std::shared_ptr<IEventHandler> mouse,
+	std::shared_ptr<IEventHandler> keyboard,
+	std::shared_ptr<IEventHandler> gameController,
+	std::shared_ptr<IEventHandler> joystick,
+	std::shared_ptr<IEventHandler> window)
+{
+	return std::make_shared<GameContext>(
+		subModel,
+		std::make_shared<Global::View>(platform,
+			subView),
+		std::make_shared<Global::EventHandler>(
+			platform,
+			mouse,
+			keyboard,
+			gameController,
+			joystick,
+			window));
+}
 
 Global::Model::Model(void) : _showLogs(true)
 {}
