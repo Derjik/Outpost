@@ -22,19 +22,16 @@ std::shared_ptr<GameContext> GameControllerDebug::Factory::createGameControllerD
 	std::shared_ptr<GameControllerDebug::Model> model(
 		std::make_shared<GameControllerDebug::Model>(platform));
 
-	return std::make_shared<GameContext>(
+	return Global::Factory::createGlobal(
+		platform,
 		model,
-		std::make_shared<Global::View>(
-			platform,
-			std::make_shared<GameControllerDebug::View>(platform, model)),
-		std::make_shared<Global::EventHandler>(
-				platform,
-				nullptr,
-				std::make_shared<GameControllerDebug::KeyboardEventHandler>(),
-				std::make_shared<GameControllerDebug::GameControllerEventHandler>(
-					platform, model),
-				nullptr,
-				nullptr));
+		std::make_shared<GameControllerDebug::View>(platform, model),
+		nullptr,
+		std::make_shared<GameControllerDebug::KeyboardEventHandler>(),
+		std::make_shared<GameControllerDebug::GameControllerEventHandler>(
+			platform, model),
+		nullptr,
+		nullptr);
 }
 
 /* ----------------------------------------------- */
