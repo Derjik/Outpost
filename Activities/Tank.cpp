@@ -52,9 +52,14 @@ void Tank::Model::elapse(Uint32 const gameTicks,
 		leftJ = SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_LEFTY) / 256;
 		rightJ = SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_RIGHTY) / 256;
 	}
-	double accel = -leftJ + -rightJ;
+	double accel = -leftJ/2 + -rightJ/2;
 
-	double deltaAngle = rightJ / 40 - leftJ / 40;
+	if (fabs(accel) < 10.f)
+		accel = 0;
+	else
+		accel -= (fabs(accel) / accel) * 10;
+
+	double deltaAngle = rightJ / 30 - leftJ / 30;
 	_dir = fmod(_dir + deltaAngle, 360.f);
 
 	VERBOSE(SDL_LOG_CATEGORY_APPLICATION,
