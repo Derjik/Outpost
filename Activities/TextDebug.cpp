@@ -15,22 +15,15 @@ std::shared_ptr<GameContext> TextDebug::Factory::createTextDebug(
 {
 	std::shared_ptr<TextDebug::Model> model(new TextDebug::Model(platform));
 
-	return std::make_shared<GameContext>(
-				model,
-				std::make_shared<Global::View>(
-					platform,
-					std::make_shared<TextDebug::View>(
-						platform,
-						model)),
-				std::make_shared<Global::EventHandler>(
-						platform,
-						nullptr,
-						std::make_shared<TextDebug::KeyboardEventHandler>(),
-						std::make_shared<TextDebug::GameControllerEventHandler>(
-							model),
-						nullptr,
-						nullptr)
-		);
+	return Global::Factory::createGlobal(
+		platform,
+		model,
+		std::make_shared<TextDebug::View>(platform, model),
+		nullptr,
+		std::make_shared<TextDebug::KeyboardEventHandler>(),
+		std::make_shared<TextDebug::GameControllerEventHandler>(model),
+		nullptr,
+		nullptr);
 }
 
 /* ----------------------------------------------- */
