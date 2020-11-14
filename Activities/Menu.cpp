@@ -17,19 +17,15 @@ std::shared_ptr<GameContext> Menu::Factory::createMenu(
 	std::shared_ptr<Menu::Controller> menuController(
 		new Menu::Controller(platform, model));
 
-	return std::make_shared<GameContext>(
+	return Global::Factory::createGlobal(
+		platform,
 		model,
-		std::make_shared<Global::View>(
-			platform,
-			std::make_shared<Menu::View>(platform, model)),
-		std::make_shared<Global::EventHandler>(
-			platform,
-			nullptr,
-			menuController,
-			menuController,
-			nullptr,
-			nullptr)
-		);
+		std::make_shared<Menu::View>(platform, model),
+		nullptr,
+		menuController,
+		menuController,
+		nullptr,
+		nullptr);
 }
 
 /* ------------------ MODEL ------------------ */
