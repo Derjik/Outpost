@@ -11,18 +11,15 @@ std::shared_ptr<GameContext> Tank::Factory::createGameControllerDebug(
 {
 	std::shared_ptr<Tank::Model> model(std::make_shared<Tank::Model>(platform));
 
-	return std::make_shared<GameContext>(
+	return Global::Factory::createGlobal(
+		platform,
 		model,
-		std::make_shared<Global::View>(
-			platform,
-			std::make_shared<Tank::View>(platform, model)),
-		std::make_shared<Global::EventHandler>(
-			platform,
-			nullptr,
-			std::make_shared<Tank::KeyboardEventHandler>(),
-			std::make_shared<Tank::GameControllerEventHandler>(platform, model),
-			nullptr,
-			nullptr));
+		std::make_shared<Tank::View>(platform, model),
+		nullptr,
+		std::make_shared<Tank::KeyboardEventHandler>(),
+		std::make_shared<Tank::GameControllerEventHandler>(platform, model),
+		nullptr,
+		nullptr);
 }
 
 Tank::Model::Model(std::shared_ptr<Platform> platform) :
