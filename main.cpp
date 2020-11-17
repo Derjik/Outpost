@@ -17,12 +17,7 @@ using namespace std;
 /*
  * TODO:
  * o Add global and local millisecond-to-gametick ratio settings
- * o Improve text displaying API
  * o Modularize menus
- * o Handle item placement
- *     TL T TR
- *     L  C  R
- *     BL B BR
  * o Add Joystick API
  */
 
@@ -31,7 +26,7 @@ int main(int argc, char ** argv)
 	int returnCode(0);
 
 	/* SDL sub-logger settings */
-	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
 
 	/* SDL Modules initialization */
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -43,6 +38,16 @@ int main(int argc, char ** argv)
 			|MIX_INIT_MP3
 			|MIX_INIT_OGG
 			|MIX_INIT_OPUS);
+
+	/* Audio Resources */
+	std::string audioAssets("assets/audio/");
+	std::map<std::string, std::string>
+		samples{ {"sample.wav", "drum"} },
+		musics{ {"music.flac", "ftl"} };
+
+	/* Text displaying resources */
+	std::string ttfAssets("assets/fonts/");
+	std::set<std::string> fontNames{ "noto", "courier", "arial" };
 
 	try
 	{
@@ -58,10 +63,9 @@ int main(int argc, char ** argv)
 		std::shared_ptr<Platform> platform(new Platform(
 			new WindowManager,
 			new GameControllerManager,
-			new Mixer(0, "assets/audio/",
-				{ {"sample.wav", "drum"} },
-				{ {"music.flac", "ftl"} })));
+			new Mixer(0, audioAssets, samples, musics)));
 
+		/* Instantiate the Main Window and its internal TrueTypeFontManager */
 		platform->getWindowManager()->addWindow(
 			"mainWindow",
 			"SDL Main Window",
@@ -71,14 +75,17 @@ int main(int argc, char ** argv)
 			Window::RatioType::FIXED_RATIO_STRETCH,
 			SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE,
 			SDL_RENDERER_ACCELERATED,
-			std::make_shared<TrueTypeFontManager>(
-				"assets/fonts/",
-				std::set<std::string>{ "noto", "courier", "arial" }));
+			std::make_shared<TrueTypeFontManager>(ttfAssets, fontNames));
 
+		/* Send Hardware Introspection results to logging facility */
 		Introspection::log();
 
+		/* Instantiate Main Menu */
 		std::shared_ptr<GameContext> menu(Menu::Factory::createMenu(platform));
+		/* Instantiate Game Engine with Main Menu as initial context */
 		std::shared_ptr<Engine> engine(new Engine(menu));
+
+		/* Start Engine Main Loop */
 		engine->run(1.f);
 	}
 	catch (Exception const & exc)
@@ -87,6 +94,7 @@ int main(int argc, char ** argv)
 		returnCode = -1;
 	}
 
+	/* SDL modules cleanup */
 	Mix_Quit();
 	IMG_Quit();
 	TTF_Quit();
