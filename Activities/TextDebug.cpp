@@ -231,20 +231,31 @@ TextDebug::View::View(std::shared_ptr<Platform> platform,
 	std::shared_ptr<Model> model) :
 	_platform(platform),
 	_model(model)
-{}
+{
+	Renderer * r(
+		_platform->getWindowManager()
+		->getWindowByName("mainWindow")
+		->getRenderer());
+
+	std::string utfText(u8"Bonjour Gérard");
+	r->addUTF8TextTexture(
+		"UTF",
+		"courier",
+		utfText,
+		18,
+		SDL_Color{ 255, 255, 255, 255 });
+}
 
 void TextDebug::View::display(void)
 {
 	// Acquire Window & Renderer for later use
 	Window * mainWindow = _platform->getWindowManager()->getWindowByName("mainWindow");
 	Renderer * renderer = mainWindow->getRenderer();
+	Texture * utf8text = renderer->getTexture("UTF");
 
 	// Clear screen
 	renderer->setDrawColor(0, 0, 32, 255);
 	renderer->fill();
-
-	// Print current app name
-	//renderer->printTextDebug("TEXT", "courier", 12, { 255, 255, 255, 255 }, {10, 10, 100, 22});
 
 	// Print debug text in dynamically-adjusted Drawing Space
 	renderer->printText("Lorem ipsum dolor sit amet, consectetur adipiscing "
@@ -257,11 +268,11 @@ void TextDebug::View::display(void)
 		"sunt in culpa qui officia deserunt mollit anim id est laborum.\n",
 		"courier", _model->getFontSize(), { 255, 255, 255, 255 },
 		_model->getDrawSpace());
-	/*
-	renderer->printTextDebug("ABCDEF\n",
-		"courier", _model->getFontSize(), { 255, 255, 255, 255 },
-		_model->getDrawSpace());
-	*/
+
+	mainWindow->getRenderer()->copy(
+		"UTF", "",
+		{ 100, 600, utf8text->getWidth(), utf8text->getHeight()});
+
 }
 
 /* ---------------------------------------------------- */
