@@ -47,7 +47,7 @@ int main(int argc, char ** argv)
 
 	/* Text displaying resources */
 	std::string ttfAssets("assets/fonts/");
-	std::set<std::string> fontNames{ "noto", "courier", "arial" };
+	std::set<std::string> fontNames{ "open-moji-color", "emoji", "courier", "arial" };
 
 	try
 	{

@@ -237,12 +237,13 @@ TextDebug::View::View(std::shared_ptr<Platform> platform,
 		->getWindowByName("mainWindow")
 		->getRenderer());
 
-	std::string utfText(u8"Bonjour Gérard");
+	std::string utfText("😄🦔");
 	r->addUTF8TextTexture(
 		"UTF",
-		"courier",
+		"open-moji-color",
+		//"arial",
 		utfText,
-		18,
+		36,
 		SDL_Color{ 255, 255, 255, 255 });
 }
 
